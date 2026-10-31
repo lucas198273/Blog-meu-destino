@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ------------------------------------------------------------------ */
+/* Design System "Meu Destino" — variáveis globais                     */
+/* Distribuição: 65% branco · 25% azul-petróleo · 10% laranja (CTA)    */
+/* ------------------------------------------------------------------ */
+:root {
+  --color-bg: #ffffff;        /* Fundo geral (respiro visual) */
+  --color-primary: #087e83;   /* Azul-petróleo: títulos, header, links, nav */
+  --color-accent: #f28b35;    /* Laranja: EXCLUSIVO para CTAs e badges */
+  --color-text: #333333;      /* Cinza-escuro para leitura confortável */
+
+  /* Derivadas de hover/contraste */
+  --color-primary-dark: #065f63;
+  --color-accent-dark: #d9721f;
+}
+
+/* Fontes: Montserrat (títulos) + Inter (texto) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+@theme inline {
+  --color-brand: var(--color-primary);
+  --color-brand-dark: var(--color-primary-dark);
+  --color-accent: var(--color-accent);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-content: var(--color-text);
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
