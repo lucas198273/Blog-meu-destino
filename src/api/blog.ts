@@ -25,8 +25,22 @@ export const blogApi = {
   getPost: (idOrSlug: string) =>
     apiGet<BlogPost>(`/api/blog/posts/${encodeURIComponent(idOrSlug)}`),
 
-  listPostProducts: (postId: string) =>
-    apiGet<Product[]>(`/api/blog/posts/${encodeURIComponent(postId)}/products`),
+  listPostProducts: async (postId: string): Promise<Product[]> => {
+    const data = await apiGet<unknown>(
+      `/api/blog/posts/${encodeURIComponent(postId)}/products`,
+    );
+    // Backend pode devolver array puro OU envelope paginado ({ items: [...] }).
+    // Normaliza para sempre trabalhar com o array de produtos.
+    if (Array.isArray(data)) return data as Product[];
+    if (
+      data &&
+      typeof data === 'object' &&
+      Array.isArray((data as { items?: unknown }).items)
+    ) {
+      return (data as { items: Product[] }).items;
+    }
+    return [];
+  },
 
   listCategories: () => apiGet<BlogCategory[]>('/api/blog/categories'),
 

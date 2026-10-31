@@ -45,6 +45,10 @@ export function BlogPostPage() {
   const data = post.data;
   if (!data) return null;
 
+  // Debug temporário — confirmar UUID do post e payload completo.
+  console.log('POST ID:', data.id);
+  console.log('DADOS DO POST:', data);
+
   const cover = data.cover_image_url ?? data.og_image_url;
   const readingMinutes = estimateReadingMinutes(data.content);
 
