@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { cn } from '../../lib/cn';
+import { usePartners } from '../../hooks/usePartners';
 import type { ProductCategory } from '../../types/product';
 import { CategoryPills } from '../blog/CategoryPills';
 import { FilterPillGroup } from './FilterPillGroup';
@@ -13,7 +14,7 @@ interface FilterOption {
 
 interface DestinationFiltersProps {
   pageType?: ProductPageType;
-  provider?: string;
+  partner?: string;
   vehicleType?: string;
   minPrice?: string;
   maxPrice?: string;
@@ -21,7 +22,7 @@ interface DestinationFiltersProps {
   categories?: ProductCategory[];
   categoriesLoading?: boolean;
   activeCount: number;
-  onProviderChange?: (provider: string) => void;
+  onPartnerChange?: (partner: string) => void;
   onVehicleTypeChange?: (vehicleType: string) => void;
   onMinPriceChange?: (price: string) => void;
   onMaxPriceChange?: (price: string) => void;
@@ -29,19 +30,6 @@ interface DestinationFiltersProps {
   onClear?: () => void;
   className?: string;
 }
-
-const VEHICLE_PARTNERS: FilterOption[] = [
-  { value: 'rentcars', label: 'Rentcars' },
-  { value: 'localiza', label: 'Localiza' },
-  { value: 'movida', label: 'Movida' },
-];
-
-const GEAR_PARTNERS: FilterOption[] = [
-  { value: 'amazon', label: 'Amazon' },
-  { value: 'magalu', label: 'Magalu' },
-  { value: 'mercado-livre', label: 'Mercado Livre' },
-  { value: 'decathlon', label: 'Decathlon' },
-];
 
 const VEHICLE_TYPES: FilterOption[] = [
   { value: 'suv', label: 'SUV' },
@@ -61,12 +49,14 @@ function SelectFilter({
   label,
   value,
   options,
+  loading = false,
   onChange,
 }: {
   id: string;
   label: string;
   value: string;
   options: FilterOption[];
+  loading?: boolean;
   onChange: (value: string) => void;
 }) {
   return (
@@ -83,7 +73,7 @@ function SelectFilter({
         onChange={(event) => onChange(event.target.value)}
         className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
       >
-        <option value="">Todos os parceiros</option>
+        <option value="">{loading ? 'Carregando…' : options.length > 0 ? 'Todos os parceiros' : 'Nenhum parceiro cadastrado'}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -96,7 +86,7 @@ function SelectFilter({
 
 export function DestinationFilters({
   pageType,
-  provider = '',
+  partner = '',
   vehicleType = '',
   minPrice = '',
   maxPrice = '',
@@ -104,7 +94,7 @@ export function DestinationFilters({
   categories = [],
   categoriesLoading = false,
   activeCount,
-  onProviderChange,
+  onPartnerChange,
   onVehicleTypeChange,
   onMinPriceChange,
   onMaxPriceChange,
@@ -114,6 +104,22 @@ export function DestinationFilters({
 }: DestinationFiltersProps) {
   const { pathname } = useLocation();
   const type = pageType ?? getPageType(pathname);
+
+  // Opções do filtro de parceiros — exclusivamente do retorno da API
+  // pública (GET /api/partners). Sem listas fixas/fallback.
+  const partnersQuery = usePartners();
+  const partnersData = Array.isArray(partnersQuery.data)
+    ? partnersQuery.data
+    : [];
+  const partnerOptions: FilterOption[] = partnersData.map(
+    (partnerItem) => ({
+      value:
+        'slug' in partnerItem && typeof partnerItem.slug === 'string'
+          ? partnerItem.slug
+          : partnerItem.nome.toLowerCase().replace(/\s+/g, '-'),
+      label: partnerItem.nome,
+    }),
+  );
 
   return (
     <aside
@@ -146,9 +152,10 @@ export function DestinationFilters({
           <SelectFilter
             id="vehicle-partner"
             label="Parceiro"
-            value={provider}
-            options={VEHICLE_PARTNERS}
-            onChange={(value) => onProviderChange?.(value)}
+            value={partner}
+            options={partnerOptions}
+            loading={partnersQuery.isLoading}
+            onChange={(value) => onPartnerChange?.(value)}
           />
           <FilterPillGroup
             label="Tipo de veículo"
@@ -166,9 +173,10 @@ export function DestinationFilters({
           <SelectFilter
             id="gear-partner"
             label="Parceiro"
-            value={provider}
-            options={GEAR_PARTNERS}
-            onChange={(value) => onProviderChange?.(value)}
+            value={partner}
+            options={partnerOptions}
+            loading={partnersQuery.isLoading}
+            onChange={(value) => onPartnerChange?.(value)}
           />
           <fieldset>
             <legend className="mb-2 text-sm font-semibold text-slate-800">
@@ -213,18 +221,28 @@ export function DestinationFilters({
       ) : null}
 
       {type === 'destination' ? (
-        <div>
-          <h3 className="mb-3 text-sm font-semibold text-slate-800">
-            Explore por região
-          </h3>
-          <CategoryPills
-            categories={categories}
-            activeSlug={category}
-            onSelect={(value) => onCategoryChange?.(value)}
-            loading={categoriesLoading}
-            ariaLabel="Filtrar pacotes por categoria"
-            allLabel="Todas as regiões"
+        <div className="grid gap-5 sm:grid-cols-2">
+          <SelectFilter
+            id="destination-partner"
+            label="Parceiro"
+            value={partner}
+            options={partnerOptions}
+            loading={partnersQuery.isLoading}
+            onChange={(value) => onPartnerChange?.(value)}
           />
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-slate-800">
+              Explore por região
+            </h3>
+            <CategoryPills
+              categories={categories}
+              activeSlug={category}
+              onSelect={(value) => onCategoryChange?.(value)}
+              loading={categoriesLoading}
+              ariaLabel="Filtrar pacotes por categoria"
+              allLabel="Todas as regiões"
+            />
+          </div>
         </div>
       ) : null}
     </aside>

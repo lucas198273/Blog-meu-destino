@@ -13,13 +13,6 @@ import type { ListProductsParams } from '../types/product';
 
 const PAGE_SIZE = 16;
 
-const GEAR_PROVIDERS: Record<string, string> = {
-  amazon: 'Amazon',
-  magalu: 'Magalu',
-  'mercado-livre': 'Mercado Livre',
-  decathlon: 'Decathlon',
-};
-
 function parsePrice(value: string | null): number | undefined {
   if (!value) return undefined;
   const parsed = Number(value);
@@ -28,8 +21,8 @@ function parsePrice(value: string | null): number | undefined {
 
 export function GearPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedProvider = searchParams.get('provider')?.toLowerCase() ?? '';
-  const provider = GEAR_PROVIDERS[selectedProvider] ? selectedProvider : '';
+  const selectedPartner = searchParams.get('partner')?.toLowerCase() ?? '';
+  const partner = selectedPartner;
   const minPriceValue = searchParams.get('min_price') ?? '';
   const maxPriceValue = searchParams.get('max_price') ?? '';
   const minPrice = parsePrice(minPriceValue);
@@ -41,11 +34,11 @@ export function GearPage() {
       kind: 'gear',
       page,
       limit: PAGE_SIZE,
-      provider: provider ? GEAR_PROVIDERS[provider] : undefined,
+      partner: partner || undefined,
       min_price: minPrice,
       max_price: maxPrice,
     }),
-    [page, provider, minPrice, maxPrice],
+    [page, partner, minPrice, maxPrice],
   );
   const products = useProducts(params);
   const meta = products.data?.meta;
@@ -65,7 +58,7 @@ export function GearPage() {
   }
 
   const activeCount =
-    Number(Boolean(provider)) +
+    Number(Boolean(partner)) +
     Number(minPrice !== undefined) +
     Number(maxPrice !== undefined);
 
@@ -97,11 +90,11 @@ export function GearPage() {
       <Container className="py-8 sm:py-10">
         <DestinationFilters
           pageType="gear"
-          provider={provider}
+          partner={partner}
           minPrice={minPriceValue}
           maxPrice={maxPriceValue}
           activeCount={activeCount}
-          onProviderChange={(value) => updateParams({ provider: value || null })}
+          onPartnerChange={(value) => updateParams({ partner: value || null })}
           onMinPriceChange={(value) =>
             updateParams({ min_price: value || null })
           }

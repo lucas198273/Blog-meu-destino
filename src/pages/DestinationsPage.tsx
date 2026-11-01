@@ -23,6 +23,7 @@ export function DestinationsPage() {
     rawCategory && categories.data?.some((item) => item.slug === rawCategory)
       ? rawCategory
       : null;
+  const partner = searchParams.get('partner')?.toLowerCase() ?? '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const posts = usePosts({ limit: 3 });
@@ -30,11 +31,12 @@ export function DestinationsPage() {
     () => ({
       kind: 'package',
       category: category ?? undefined,
+      partner: partner || undefined,
       page,
       limit: PAGE_SIZE,
       sort: 'display_order',
     }),
-    [category, page],
+    [category, partner, page],
   );
   const packages = useProducts(params);
   const meta = packages.data?.meta;
@@ -49,7 +51,8 @@ export function DestinationsPage() {
     setSearchParams(next);
   }
 
-  const activeCount = Number(Boolean(category));
+  const activeCount =
+    Number(Boolean(category)) + Number(Boolean(partner));
 
   return (
     <>
@@ -138,10 +141,12 @@ export function DestinationsPage() {
 
           <DestinationFilters
             pageType="destination"
+            partner={partner}
             category={category}
             categories={categories.data ?? []}
             categoriesLoading={categories.isLoading}
             activeCount={activeCount}
+            onPartnerChange={(value) => updateParams({ partner: value || null })}
             onCategoryChange={(value) => updateParams({ category: value })}
             onClear={() => setSearchParams({})}
             className="mb-7"

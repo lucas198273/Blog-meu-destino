@@ -16,6 +16,18 @@ export interface ProductImage {
   displayOrder?: number;
 }
 
+/** Parceiro comercial vinculado ao produto (oferta em parceria). */
+export interface PartnerSummary {
+  nome: string;
+  logo_url: string | null;
+}
+
+/** Parceiro retornado por GET /api/partners. */
+export interface Partner extends PartnerSummary {
+  id: string;
+  slug: string;
+}
+
 /** Produto retornado pelas rotas públicas de produtos e ofertas do blog. */
 export interface Product {
   id: string;
@@ -36,7 +48,8 @@ export interface Product {
   updated_at: string;
   kind: ProductKind;
   affiliate_url: string | null;
-  provider: string | null;
+  partner_id: string | null;
+  partner?: PartnerSummary;
   attributes?: Record<string, unknown>;
   // Campos legados de curso mantidos para as telas existentes; não são usados
   // pelo card de ofertas associadas ao blog.
@@ -84,8 +97,8 @@ export interface ListProductsParams {
   page?: number;
   limit?: number;
   kind?: ProductKind;
-  provider?: string;
   category?: string;
+  partner?: string;
   modality?: string;
   level?: string;
   certification?: boolean;

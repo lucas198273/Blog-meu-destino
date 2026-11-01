@@ -2,7 +2,8 @@ import type { ProductKind, ProductSort } from '../../types/product';
 
 /**
  * Opções de filtro do catálogo de destinos, alinhadas aos parâmetros
- * aceitos por GET /api/products: kind, provider, category, sort.
+ * aceitos por GET /api/products: kind, category, sort. Parceiros vêm
+ * dinamicamente de GET /api/partners via hook `usePartners`.
  */
 export const KIND_OPTIONS: readonly { value: ProductKind; label: string }[] = [
   { value: 'vehicle', label: 'Veículo' },
@@ -10,13 +11,6 @@ export const KIND_OPTIONS: readonly { value: ProductKind; label: string }[] = [
   { value: 'gear', label: 'Equipamento' },
   { value: 'experience', label: 'Experiência' },
   { value: 'destination', label: 'Destino' },
-];
-
-/** Fornecedores conhecidos (parâmetro `provider` do backend). */
-export const PROVIDER_OPTIONS: readonly { value: string; label: string }[] = [
-  { value: 'Rentcars', label: 'Rentcars' },
-  { value: 'CVC', label: 'CVC' },
-  { value: 'Booking', label: 'Booking' },
 ];
 
 export const SORT_OPTIONS: readonly { value: ProductSort; label: string }[] = [
@@ -30,10 +24,6 @@ export const SORT_OPTIONS: readonly { value: ProductSort; label: string }[] = [
 ];
 
 export const KIND_VALUES: readonly ProductKind[] = KIND_OPTIONS.map(
-  (option) => option.value,
-);
-
-export const PROVIDER_VALUES: readonly string[] = PROVIDER_OPTIONS.map(
   (option) => option.value,
 );
 
@@ -56,11 +46,4 @@ export function parseEnumList<T extends string>(
     .filter((item): item is T => allowed.includes(item as T));
 }
 
-/** Valores de `provider` da query string, validados contra a lista conhecida. */
-export function parseProviderList(value: string | null): string[] {
-  if (!value) return [];
-  return value
-    .split(',')
-    .map((item) => item.trim())
-    .filter((item) => PROVIDER_VALUES.includes(item));
-}
+

@@ -75,8 +75,8 @@ function RelatedProductCard({ product }: { product: Product }) {
         <h3 className="text-base font-semibold leading-snug text-slate-900">
           {product.nome}
         </h3>
-        {product.provider ? (
-          <p className="text-sm text-slate-600">{product.provider}</p>
+        {product.partner ? (
+          <p className="text-sm text-slate-600">{product.partner.nome}</p>
         ) : null}
         <p className="mt-auto text-base font-semibold text-slate-900">
           {product.preco !== null ? formatPrice(product.preco) : 'Consulte'}

@@ -1,4 +1,4 @@
-﻿import { useQuery } from '@tanstack/react-query';
+﻿import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { blogApi } from '../api/blog';
 import type { ListBlogPostsParams } from '../types/blog';
 
@@ -10,7 +10,7 @@ export function usePosts(params: ListBlogPostsParams = {}) {
   return useQuery({
     queryKey: ['blog', 'posts', params],
     queryFn: () => blogApi.listPosts(params),
-    staleTime: 60_000,
+    placeholderData: keepPreviousData,
   });
 }
 

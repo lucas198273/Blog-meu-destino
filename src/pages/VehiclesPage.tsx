@@ -13,12 +13,6 @@ import type { ListProductsParams } from '../types/product';
 
 const PAGE_SIZE = 12;
 
-const VEHICLE_PROVIDERS: Record<string, string> = {
-  rentcars: 'Rentcars',
-  localiza: 'Localiza',
-  movida: 'Movida',
-};
-
 const VEHICLE_TYPES: Record<string, string> = {
   suv: 'SUV',
   sedan: 'Sedan',
@@ -28,9 +22,8 @@ const VEHICLE_TYPES: Record<string, string> = {
 
 export function VehiclesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedProvider = searchParams.get('provider')?.toLowerCase() ?? '';
+  const partner = searchParams.get('partner')?.toLowerCase() ?? '';
   const selectedType = searchParams.get('vehicle_type')?.toLowerCase() ?? '';
-  const provider = VEHICLE_PROVIDERS[selectedProvider] ? selectedProvider : '';
   const vehicleType = VEHICLE_TYPES[selectedType] ? selectedType : '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
@@ -39,10 +32,10 @@ export function VehiclesPage() {
       kind: 'vehicle',
       page,
       limit: PAGE_SIZE,
-      provider: provider ? VEHICLE_PROVIDERS[provider] : undefined,
+      partner: partner || undefined,
       tags: vehicleType ? VEHICLE_TYPES[vehicleType] : undefined,
     }),
-    [page, provider, vehicleType],
+    [page, partner, vehicleType],
   );
   const products = useProducts(params);
   const meta = products.data?.meta;
@@ -61,7 +54,7 @@ export function VehiclesPage() {
     setSearchParams({});
   }
 
-  const activeCount = Number(Boolean(provider)) + Number(Boolean(vehicleType));
+  const activeCount = Number(Boolean(partner)) + Number(Boolean(vehicleType));
 
   return (
     <>
@@ -90,10 +83,10 @@ export function VehiclesPage() {
       <Container className="py-8 sm:py-10">
         <DestinationFilters
           pageType="vehicle"
-          provider={provider}
+          partner={partner}
           vehicleType={vehicleType}
           activeCount={activeCount}
-          onProviderChange={(value) => updateParams({ provider: value || null })}
+          onPartnerChange={(value) => updateParams({ partner: value || null })}
           onVehicleTypeChange={(value) =>
             updateParams({ vehicle_type: value || null })
           }

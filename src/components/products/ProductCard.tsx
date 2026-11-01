@@ -12,9 +12,8 @@ export function ProductCard({ product }: { product: Product }) {
   const cover = image?.url;
   const ctaLabel = kindCtaLabel(product.kind);
 
-  const badges = [product.provider].filter(
-    (value): value is string => Boolean(value),
-  );
+  const partner = product.partner;
+
   return (
     <Card className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
       {/* Imagem */}
@@ -39,20 +38,25 @@ export function ProductCard({ product }: { product: Product }) {
           {product.nome}
         </span>
 
-        {badges.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
-            {badges.map((badge) => (
-                <Badge
-                  key={badge}
-                  className={
-                    product.kind === 'vehicle'
-                      ? 'bg-orange-50 font-semibold text-orange-800 ring-1 ring-orange-200'
-                      : 'bg-slate-100 text-slate-700'
-                  }
-                >
-                  {badge}
-                </Badge>
-              ))}
+        {partner ? (
+          <div className="flex items-center gap-1.5">
+            {partner.logo_url ? (
+              <img
+                src={partner.logo_url}
+                alt={partner.nome}
+                loading="lazy"
+                className="h-5 w-5 rounded object-contain"
+              />
+            ) : null}
+            <Badge
+              className={
+                product.kind === 'vehicle'
+                  ? 'bg-orange-50 font-semibold text-orange-800 ring-1 ring-orange-200'
+                  : 'bg-slate-100 text-slate-700'
+              }
+            >
+              {partner.nome}
+            </Badge>
           </div>
         ) : null}
 

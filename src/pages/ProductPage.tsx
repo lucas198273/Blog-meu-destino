@@ -113,6 +113,7 @@ export function ProductPage() {
   if (!data || !derived) return null;
 
   const cover = data.images[0];
+  const partner = data.partner;
 
   return (
     <>
@@ -151,6 +152,24 @@ export function ProductPage() {
                 <p className="mt-4 text-2xl font-semibold text-[var(--color-primary)]">
                   {formatPrice(data.preco)}
                 </p>
+              ) : null}
+              {partner ? (
+                <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-100 bg-white px-4 py-2.5 shadow-sm">
+                  <span className="text-sm text-slate-600">
+                    Oferta em parceria com
+                  </span>
+                  {partner.logo_url ? (
+                    <img
+                      src={partner.logo_url}
+                      alt={partner.nome}
+                      loading="lazy"
+                      className="h-7 max-w-[110px] object-contain"
+                    />
+                  ) : null}
+                  <span className="text-sm font-semibold text-slate-900">
+                    {partner.nome}
+                  </span>
+                </div>
               ) : null}
               {data.descricao ? (
                 <div className="mt-6 whitespace-pre-line font-body text-[15px] leading-relaxed text-[var(--color-text)]">
