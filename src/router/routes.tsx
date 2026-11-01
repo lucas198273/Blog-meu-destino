@@ -4,7 +4,9 @@ import { PublicLayout } from '../components/layout/PublicLayout';
 import { HomePage } from '../pages/HomePage';
 import { BlogListPage } from '../pages/BlogListPage';
 import { BlogPostPage } from '../pages/BlogPostPage';
-import { ProductsPage } from '../pages/ProductsPage';
+import { DestinationsPage } from '../pages/DestinationsPage';
+import { VehiclesPage } from '../pages/VehiclesPage';
+import { GearPage } from '../pages/GearPage';
 import { ProductPage } from '../pages/ProductPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { AboutPage } from '../pages/AboutPage';
@@ -25,8 +27,9 @@ export const routes: RouteObject[] = [
       { path: 'blog', element: <BlogListPage /> },
       { path: 'blog/categoria/:slug', element: <BlogListPage /> },
       { path: 'blog/:slug', element: <BlogPostPage /> },
-      // Catálogo de destinos/ofertas (o domínio segue `Product`).
-      { path: 'destinos', element: <ProductsPage /> },
+      { path: 'destinos', element: <DestinationsPage /> },
+      { path: 'aluguel-de-veiculos', element: <VehiclesPage /> },
+      { path: 'equipamentos', element: <GearPage /> },
       { path: 'destino/:slug', element: <ProductPage /> },
       { path: 'sobre', element: <AboutPage /> },
       { path: 'contato', element: <ContactPage /> },

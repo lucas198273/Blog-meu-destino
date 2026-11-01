@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { formatDate } from '../../lib/format';
 import type { BlogPost } from '../../types/blog';
-import { Badge } from '../ui/Badge';
 import { Card } from '../ui/Card';
 
 export function PostCard({ post }: { post: BlogPost }) {
+  const excerpt = post.excerpt?.trim();
+
   return (
     <Card className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
       {/* Imagem */}
@@ -23,21 +23,6 @@ export function PostCard({ post }: { post: BlogPost }) {
 
       {/* Conteúdo */}
       <div className="flex flex-1 flex-col gap-3 p-5">
-        {/* Tags + Data */}
-        <div className="flex flex-wrap items-center gap-2">
-          {post.tags.map((tag) => (
-            <Badge
-              key={tag}
-              className="rounded-md bg-[#E7F5F6] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-primary)]"
-            >
-              {tag}
-            </Badge>
-          ))}
-          <span className="text-xs text-slate-500">
-            {formatDate(post.published_at)}
-          </span>
-        </div>
-
         {/* Título */}
         <Link
           to={`/blog/${post.slug}`}
@@ -47,9 +32,9 @@ export function PostCard({ post }: { post: BlogPost }) {
         </Link>
 
         {/* Excerpt (opcional) */}
-        {post.excerpt ? (
+        {excerpt ? (
           <p className="line-clamp-2 text-sm leading-relaxed text-slate-600">
-            {post.excerpt}
+            {excerpt}
           </p>
         ) : null}
 
@@ -67,4 +52,3 @@ export function PostCard({ post }: { post: BlogPost }) {
     </Card>
   );
 }
-

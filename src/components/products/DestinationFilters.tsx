@@ -1,156 +1,232 @@
-import { SlidersHorizontal, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { cn } from '../../lib/cn';
-import { Button } from '../ui/Button';
+import type { ProductCategory } from '../../types/product';
 import { CategoryPills } from '../blog/CategoryPills';
 import { FilterPillGroup } from './FilterPillGroup';
-import { KIND_OPTIONS, PROVIDER_OPTIONS, SORT_OPTIONS } from './destinationFilterOptions';
-import type { ProductCategory, ProductKind, ProductSort } from '../../types/product';
 
-/** Valores ativos dos filtros de destinos (arrays vazios = sem filtro). */
-export interface DestinationFiltersValue {
-  kind: ProductKind[];
-  provider: string[];
-  category: string | null;
-  sort: ProductSort;
+export type ProductPageType = 'vehicle' | 'gear' | 'destination';
+
+interface FilterOption {
+  value: string;
+  label: string;
 }
 
-interface DestinationFiltersProps extends DestinationFiltersValue {
-  categories: ProductCategory[];
-  categoriesLoading: boolean;
+interface DestinationFiltersProps {
+  pageType?: ProductPageType;
+  provider?: string;
+  vehicleType?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  category?: string | null;
+  categories?: ProductCategory[];
+  categoriesLoading?: boolean;
   activeCount: number;
-  onToggleKind: (value: ProductKind) => void;
-  onToggleProvider: (value: string) => void;
-  onCategory: (slug: string | null) => void;
-  onSort: (value: ProductSort) => void;
-  onClear: () => void;
+  onProviderChange?: (provider: string) => void;
+  onVehicleTypeChange?: (vehicleType: string) => void;
+  onMinPriceChange?: (price: string) => void;
+  onMaxPriceChange?: (price: string) => void;
+  onCategoryChange?: (category: string | null) => void;
+  onClear?: () => void;
   className?: string;
 }
 
-/**
- * Painel de filtros do catálogo de destinos/ofertas.
- * No desktop fica sempre visível na sidebar; no mobile abre em accordion.
- */
-export function DestinationFilters(props: DestinationFiltersProps) {
-  return (
-    <div className={props.className}>
-      <DestinationFiltersFields {...props} />
-    </div>
-  );
+const VEHICLE_PARTNERS: FilterOption[] = [
+  { value: 'rentcars', label: 'Rentcars' },
+  { value: 'localiza', label: 'Localiza' },
+  { value: 'movida', label: 'Movida' },
+];
+
+const GEAR_PARTNERS: FilterOption[] = [
+  { value: 'amazon', label: 'Amazon' },
+  { value: 'magalu', label: 'Magalu' },
+  { value: 'mercado-livre', label: 'Mercado Livre' },
+  { value: 'decathlon', label: 'Decathlon' },
+];
+
+const VEHICLE_TYPES: FilterOption[] = [
+  { value: 'suv', label: 'SUV' },
+  { value: 'sedan', label: 'Sedan' },
+  { value: 'economico', label: 'Econômico' },
+  { value: 'luxo', label: 'Luxo' },
+];
+
+function getPageType(pathname: string): ProductPageType {
+  if (pathname.startsWith('/aluguel-de-veiculos')) return 'vehicle';
+  if (pathname.startsWith('/equipamentos')) return 'gear';
+  return 'destination';
 }
 
-/** Botão que alterna o painel no mobile (visível só abaixo de `lg`). */
-export function DestinationFiltersToggle({
-  open,
-  activeCount,
-  onClick,
+function SelectFilter({
+  id,
+  label,
+  value,
+  options,
+  onChange,
 }: {
-  open: boolean;
-  activeCount: number;
-  onClick: () => void;
+  id: string;
+  label: string;
+  value: string;
+  options: FilterOption[];
+  onChange: (value: string) => void;
 }) {
   return (
-    <Button
-      variant="secondary"
-      onClick={onClick}
-      aria-expanded={open}
-      aria-controls="destinos-filtros"
-      className="w-full lg:hidden"
-    >
-      <SlidersHorizontal className="mr-2 h-4 w-4" aria-hidden="true" />
-      {open ? 'Ocultar filtros' : 'Filtros'}
-      {activeCount > 0 ? (
-        <span className="ml-2 rounded-full bg-teal-700 px-2 py-0.5 text-xs text-white">
-          {activeCount}
-        </span>
-      ) : null}
-    </Button>
+    <div>
+      <label
+        htmlFor={id}
+        className="mb-2 block text-sm font-semibold text-slate-800"
+      >
+        {label}
+      </label>
+      <select
+        id={id}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
+      >
+        <option value="">Todos os parceiros</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }
 
-export function DestinationFiltersFields({
-  kind,
-  provider,
-  category,
-  sort,
-  categories,
-  categoriesLoading,
+export function DestinationFilters({
+  pageType,
+  provider = '',
+  vehicleType = '',
+  minPrice = '',
+  maxPrice = '',
+  category = null,
+  categories = [],
+  categoriesLoading = false,
   activeCount,
-  onToggleKind,
-  onToggleProvider,
-  onCategory,
-  onSort,
+  onProviderChange,
+  onVehicleTypeChange,
+  onMinPriceChange,
+  onMaxPriceChange,
+  onCategoryChange,
   onClear,
+  className,
 }: DestinationFiltersProps) {
+  const { pathname } = useLocation();
+  const type = pageType ?? getPageType(pathname);
+
   return (
-    <div className="space-y-7">
-      <section>
-        <h2 className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-500">
-          Tipo de oferta
-        </h2>
-        <FilterPillGroup
-          label="Tipo"
-          options={KIND_OPTIONS}
-          selected={kind}
-          onToggle={onToggleKind}
-        />
-      </section>
+    <aside
+      aria-label="Filtros de produtos"
+      className={cn(
+        'rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5',
+        className,
+      )}
+    >
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-bold text-slate-900">Refinar busca</p>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Encontre a opção ideal para você
+          </p>
+        </div>
+        {activeCount > 0 ? (
+          <button
+            type="button"
+            onClick={() => onClear?.()}
+            className="shrink-0 text-xs font-semibold text-teal-800 underline-offset-4 hover:underline"
+          >
+            Limpar
+          </button>
+        ) : null}
+      </div>
 
-      <section>
-        <h2 className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-500">
-          Fornecedor
-        </h2>
-        <FilterPillGroup
-          label="Fornecedor"
-          options={PROVIDER_OPTIONS}
-          selected={provider}
-          onToggle={onToggleProvider}
-        />
-      </section>
-
-      <section>
-        <h2 className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-500">
-          Categoria
-        </h2>
-        <CategoryPills
-          categories={categories}
-          activeSlug={category}
-          onSelect={onCategory}
-          loading={categoriesLoading}
-          ariaLabel="Filtrar destinos por categoria"
-          allLabel="Todas"
-        />
-      </section>
-
-      <section>
-        <label
-          htmlFor="destinos-sort"
-          className="mb-3 block text-xs font-medium uppercase tracking-wide text-slate-500"
-        >
-          Ordenar por
-        </label>
-        <select
-          id="destinos-sort"
-          value={sort}
-          onChange={(event) => onSort(event.target.value as ProductSort)}
-          className={cn(
-            'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none',
-            'focus-visible:border-teal-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--color-primary)]',
-          )}
-        >
-          {SORT_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </section>
-
-      {activeCount > 0 ? (
-        <Button variant="ghost" onClick={onClear} className="w-full justify-start">
-          <X className="mr-2 h-4 w-4" aria-hidden="true" />
-          Limpar filtros
-        </Button>
+      {type === 'vehicle' ? (
+        <div className="grid gap-5 md:grid-cols-2">
+          <SelectFilter
+            id="vehicle-partner"
+            label="Parceiro"
+            value={provider}
+            options={VEHICLE_PARTNERS}
+            onChange={(value) => onProviderChange?.(value)}
+          />
+          <FilterPillGroup
+            label="Tipo de veículo"
+            options={VEHICLE_TYPES}
+            selected={vehicleType ? [vehicleType] : []}
+            onToggle={(value) =>
+              onVehicleTypeChange?.(value === vehicleType ? '' : value)
+            }
+          />
+        </div>
       ) : null}
-    </div>
+
+      {type === 'gear' ? (
+        <div className="grid gap-5 sm:grid-cols-2">
+          <SelectFilter
+            id="gear-partner"
+            label="Parceiro"
+            value={provider}
+            options={GEAR_PARTNERS}
+            onChange={(value) => onProviderChange?.(value)}
+          />
+          <fieldset>
+            <legend className="mb-2 text-sm font-semibold text-slate-800">
+              Faixa de preço
+            </legend>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="sr-only" htmlFor="gear-min-price">
+                Preço mínimo
+              </label>
+              <input
+                id="gear-min-price"
+                type="number"
+                min="0"
+                step="1"
+                inputMode="decimal"
+                placeholder="Mínimo"
+                value={minPrice}
+                onChange={(event) =>
+                  onMinPriceChange?.(event.target.value)
+                }
+                className="min-w-0 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
+              />
+              <label className="sr-only" htmlFor="gear-max-price">
+                Preço máximo
+              </label>
+              <input
+                id="gear-max-price"
+                type="number"
+                min="0"
+                step="1"
+                inputMode="decimal"
+                placeholder="Máximo"
+                value={maxPrice}
+                onChange={(event) =>
+                  onMaxPriceChange?.(event.target.value)
+                }
+                className="min-w-0 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
+              />
+            </div>
+          </fieldset>
+        </div>
+      ) : null}
+
+      {type === 'destination' ? (
+        <div>
+          <h3 className="mb-3 text-sm font-semibold text-slate-800">
+            Explore por região
+          </h3>
+          <CategoryPills
+            categories={categories}
+            activeSlug={category}
+            onSelect={(value) => onCategoryChange?.(value)}
+            loading={categoriesLoading}
+            ariaLabel="Filtrar pacotes por categoria"
+            allLabel="Todas as regiões"
+          />
+        </div>
+      ) : null}
+    </aside>
   );
 }

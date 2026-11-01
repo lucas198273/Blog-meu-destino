@@ -1,28 +1,45 @@
-import { Link, NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/cn';
 import { Container } from '../ui/Container';
 
-/** Logo textual "Meu Destino". Troque por <img> quando houver logotipo. */
 const navItems = [
   { to: '/', label: 'Início' },
-  { to: '/blog', label: 'Blog' },
   { to: '/destinos', label: 'Destinos' },
-  { to: '/sobre', label: 'Sobre' },
-  { to: '/contato', label: 'Contato' },
+  { to: '/aluguel-de-veiculos', label: 'Aluguel de Carros' },
+  { to: '/equipamentos', label: 'Equipamentos' },
+  { to: '/blog', label: 'Blog' },
 ];
 
 export function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-100 bg-[var(--color-bg)]/95 backdrop-blur">
       <Container>
-        <div className="flex h-[72px] items-center justify-between gap-6">
-          {/* Logo */}
+        <div className="flex h-[72px] items-center justify-between gap-4">
           <Link
             to="/"
             className="flex shrink-0 items-center gap-2"
             aria-label="Meu Destino - Página inicial"
+            onClick={closeMenu}
           >
-            <svg viewBox="0 0 24 24" className="h-7 w-7" fill="var(--color-primary)" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-7 w-7"
+              fill="var(--color-primary)"
+              aria-hidden="true"
+            >
               <path d="M12 2C7.6 2 4 5.6 4 10c0 5.4 7.2 11.6 7.5 11.9a.8.8 0 0 0 1 0C12.8 21.6 20 15.4 20 10c0-4.4-3.6-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
             </svg>
             <span className="font-heading text-xl font-extrabold tracking-tight text-[var(--color-primary)]">
@@ -30,8 +47,10 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Navegação */}
-          <nav className="hidden items-center gap-7 md:flex" aria-label="Navegação principal">
+          <nav
+            className="hidden items-center gap-5 lg:flex xl:gap-7"
+            aria-label="Navegação principal"
+          >
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -39,7 +58,7 @@ export function Header() {
                 end={item.to === '/'}
                 className={({ isActive }) =>
                   cn(
-                    'text-[14px] font-medium transition-colors',
+                    'whitespace-nowrap text-[13px] font-medium transition-colors xl:text-sm',
                     isActive
                       ? 'text-[var(--color-primary)]'
                       : 'text-[var(--color-text)] hover:text-[var(--color-primary)]',
@@ -51,66 +70,74 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Ações à direita */}
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              aria-label="Buscar"
-              className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-[var(--color-primary)]"
-            >
-              <SearchIcon />
-            </button>
-
-            {/* CTA laranja */}
             <Link
               to="/destinos"
               className="hidden h-10 items-center rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)] sm:inline-flex"
             >
-              Planeje sua Viagem
+              Planeje sua viagem
             </Link>
-
             <button
               type="button"
-              aria-label="Abrir menu"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 md:hidden"
+              aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700 lg:hidden"
             >
-              <MenuIcon />
+              {menuOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
       </Container>
+
+      {menuOpen ? (
+        <div className="lg:hidden">
+          <button
+            type="button"
+            aria-label="Fechar navegação"
+            onClick={closeMenu}
+            className="fixed inset-x-0 bottom-0 top-[72px] z-40 bg-slate-950/30"
+          />
+          <nav
+            id="mobile-navigation"
+            aria-label="Navegação principal"
+            className="absolute inset-x-0 top-full z-50 border-t border-slate-100 bg-white px-4 pb-5 pt-3 shadow-xl sm:px-6"
+          >
+            <div className="mx-auto flex max-w-7xl flex-col">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === '/'}
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    cn(
+                      'rounded-xl px-4 py-3.5 text-base font-semibold transition-colors',
+                      isActive
+                        ? 'bg-teal-50 text-teal-900'
+                        : 'text-slate-700 hover:bg-slate-50',
+                    )
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+              <Link
+                to="/destinos"
+                onClick={closeMenu}
+                className="mt-3 inline-flex h-12 items-center justify-center rounded-xl bg-[var(--color-accent)] px-4 text-sm font-bold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
+              >
+                Planeje sua viagem
+              </Link>
+            </div>
+          </nav>
+        </div>
+      ) : null}
     </header>
-  );
-}
-
-/* Ícones */
-function SearchIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[18px] w-[18px]"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="7" />
-      <path d="m16.5 16.5 3.5 3.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-5 w-5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      aria-hidden="true"
-    >
-      <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
-    </svg>
   );
 }

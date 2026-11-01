@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar } from 'lucide-react';
 import { usePosts } from '../../hooks/usePosts';
-import { formatDate } from '../../lib/format';
 import type { BlogPost } from '../../types/blog';
 
 const RECENT_LIMIT = 6;
@@ -63,10 +61,6 @@ export function RecentPostsList({ currentPostId }: RecentPostsListProps) {
                 <div className="flex min-w-0 flex-col gap-1">
                   <span className="line-clamp-2 text-sm font-semibold leading-snug text-slate-800 transition-colors group-hover:text-[var(--color-primary)]">
                     {post.title}
-                  </span>
-                  <span className="flex items-center gap-1 text-xs text-slate-500">
-                    <Calendar className="h-3 w-3" />
-                    {formatDate(post.published_at)}
                   </span>
                 </div>
               </Link>
