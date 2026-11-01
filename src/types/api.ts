@@ -2,6 +2,7 @@
  * Espelho fiel do envelope do backend-cm- (shared/http/HttpResponse.ts).
  * Toda rota responde com este formato.
  */
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T | null;
