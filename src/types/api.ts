@@ -16,6 +16,7 @@ export interface PaginatedData<T> {
 }
 
 
+
 /** Espelho de shared/pagination/pagination.ts. */
 
 export interface PaginatedMeta {
