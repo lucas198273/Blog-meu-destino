@@ -1,10 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ------------------------------------------------------------------ */
-/* Design System "Meu Destino" — variáveis globais                     */
-/* Distribuição: 65% branco · 25% azul-petróleo · 10% laranja (CTA)    */
-/* ------------------------------------------------------------------ */
+
 :root {
   --color-bg: #ffffff;        /* Fundo geral (respiro visual) */
   --color-primary: #087e83;   /* Azul-petróleo: títulos, header, links, nav */
