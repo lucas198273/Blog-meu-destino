@@ -21,12 +21,11 @@ export function Footer() {
               className="inline-flex items-center gap-2"
               aria-label="Meu Destino - Página inicial"
             >
-              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="var(--color-primary)" aria-hidden="true">
-                <path d="M12 2C7.6 2 4 5.6 4 10c0 5.4 7.2 11.6 7.5 11.9a.8.8 0 0 0 1 0C12.8 21.6 20 15.4 20 10c0-4.4-3.6-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
-              </svg>
-              <span className="font-heading text-xl font-extrabold tracking-tight text-[var(--color-primary)]">
-                Meu Destino
-              </span>
+              <img
+                src="/assets/logo.webp"
+                alt="Meu Destino"
+                className="h-16 w-auto rounded-lg bg-white p-1"
+              />
             </Link>
 
             <p className="font-heading mt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -55,8 +54,8 @@ export function Footer() {
               <Link to="/blog" className="w-fit text-sm text-slate-500 transition-colors hover:text-[var(--color-primary)]">
                 Blog
               </Link>
-              <Link to="/destinos" className="w-fit text-sm text-slate-500 transition-colors hover:text-[var(--color-primary)]">
-                Destinos
+              <Link to="/pacotes-de-viagem" className="w-fit text-sm text-slate-500 transition-colors hover:text-[var(--color-primary)]">
+                Pacotes de viagem
               </Link>
               <Link to="/sobre" className="w-fit text-sm text-slate-500 transition-colors hover:text-[var(--color-primary)]">
                 Sobre

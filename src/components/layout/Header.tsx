@@ -6,11 +6,12 @@ import { Container } from '../ui/Container';
 
 const navItems = [
   { to: '/', label: 'Início' },
-  { to: '/destinos', label: 'Destinos' },
+  { to: '/pacotes-de-viagem', label: 'Pacotes de viagem' },
   { to: '/veiculos', label: 'Veículos' },
   { to: '/equipamentos', label: 'Equipamentos' },
   { to: '/categorias', label: 'Categorias' },
   { to: '/blog', label: 'Blog' },
+  { to: '/sobre', label: 'Sobre' },
 ];
 
 export function Header() {
@@ -35,17 +36,11 @@ export function Header() {
             aria-label="Meu Destino - Página inicial"
             onClick={closeMenu}
           >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-7 w-7"
-              fill="var(--color-primary)"
-              aria-hidden="true"
-            >
-              <path d="M12 2C7.6 2 4 5.6 4 10c0 5.4 7.2 11.6 7.5 11.9a.8.8 0 0 0 1 0C12.8 21.6 20 15.4 20 10c0-4.4-3.6-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
-            </svg>
-            <span className="font-heading text-xl font-extrabold tracking-tight text-[var(--color-primary)]">
-              Meu Destino
-            </span>
+            <img
+              src="/assets/logo.webp"
+              alt="Meu Destino"
+              className="h-13 w-auto rounded-lg bg-white p-1"
+            />
           </Link>
 
           <nav
@@ -73,7 +68,7 @@ export function Header() {
 
           <div className="flex items-center gap-3">
             <Link
-              to="/destinos"
+              to="/pacotes-de-viagem"
               className="hidden h-10 items-center rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)] sm:inline-flex"
             >
               Planeje sua viagem
@@ -129,7 +124,7 @@ export function Header() {
                 </NavLink>
               ))}
               <Link
-                to="/destinos"
+                to="/pacotes-de-viagem"
                 onClick={closeMenu}
                 className="mt-3 inline-flex h-12 items-center justify-center rounded-xl bg-[var(--color-accent)] px-4 text-sm font-bold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
               >

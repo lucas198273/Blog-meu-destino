@@ -39,7 +39,10 @@ export function HomePage() {
     () => ({ limit: FEATURED_LIMIT, featured: true }),
     [],
   );
-  const productsParams = useMemo(() => ({ limit: PRODUCTS_LIMIT }), []);
+  const productsParams = useMemo(
+    () => ({ featured: true, limit: PRODUCTS_LIMIT }),
+    [],
+  );
 
   const filteredPosts = usePosts(filteredParams);
   const featuredPosts = usePosts(featuredParams);
@@ -90,11 +93,11 @@ export function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink to="/blog">Explorar Destinos</ButtonLink>
-              <ButtonLink to="/destinos" variant="secondary">
+              <ButtonLink to="/pacotes-de-viagem" variant="secondary">
                 Ver Pacotes CVC
               </ButtonLink>
               <ButtonLink
-                to="/destinos"
+                to="/aluguel-de-veiculos"
                 className="bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-dark)]"
               >
                 Alugar Veículo
@@ -154,22 +157,48 @@ export function HomePage() {
 
         <section className="mt-16">
           <h2 className="mb-8 text-2xl font-bold text-[var(--color-primary)]">
-            Destinos e ofertas em destaque
+            Ofertas em destaque
           </h2>
           {products.isLoading ? (
             <PageLoader />
           ) : products.isError ? (
             <ErrorState
-              message="Não foi possível carregar os destinos."
+              message="Não foi possível carregar as ofertas."
               onRetry={() => products.refetch()}
             />
           ) : products.data && products.data.items.length > 0 ? (
             <ProductGrid products={products.data.items} />
           ) : (
-            <EmptyState title="Nenhum destino em destaque ainda" />
+            <EmptyState title="Nenhuma oferta em destaque ainda" />
           )}
         </section>
       </Container>
+
+      {/* Seção institucional — contraste de marca com CTA para /sobre */}
+      <section className="bg-gradient-to-br from-[#073b3e] via-[#0d5556] to-[#18736c] text-white">
+        <Container className="py-16 sm:py-20">
+          <div className="mx-auto max-w-2xl text-center">
+            <img
+              src="/assets/logo.webp"
+              alt="Meu Destino"
+              loading="lazy"
+              className="mx-auto h-24 w-auto rounded-2xl bg-white p-3 shadow-lg"
+            />
+            <p className="mt-8 text-base leading-relaxed text-white/90 sm:text-lg">
+              O Meu Destino é o seu guia definitivo de viagens. Nós conectamos
+              você aos melhores conteúdos e às ofertas exclusivas dos nossos
+              parceiros para que sua próxima aventura seja inesquecível.
+            </p>
+            <ButtonLink
+              to="/sobre"
+              variant="secondary"
+              className="mt-8 bg-white/10 text-white ring-1 ring-white/30 backdrop-blur hover:bg-white/20 hover:text-white"
+            >
+              Saiba mais sobre nós
+            </ButtonLink>
+          </div>
+        </Container>
+      </section>
     </>
   );
 }

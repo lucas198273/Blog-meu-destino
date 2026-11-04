@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
 <url><loc>https://guiameudestino.com.br/</loc><lastmod>2026-11-04</lastmod><priority>1.0</priority></url>
 <url><loc>https://guiameudestino.com.br/blog</loc><lastmod>2026-11-04</lastmod><priority>0.9</priority></url>
 <url><loc>https://guiameudestino.com.br/blog/categorias</loc><lastmod>2026-11-04</lastmod><priority>0.7</priority></url>
 <url><loc>https://guiameudestino.com.br/categorias</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
 <url><loc>https://guiameudestino.com.br/veiculos</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
 <url><loc>https://guiameudestino.com.br/equipamentos</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
-<url><loc>https://guiameudestino.com.br/viagens</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
-<url><loc>https://guiameudestino.com.br/destinos</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
+<url><loc>https://guiameudestino.com.br/pacotes-de-viagem</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
 <url><loc>https://guiameudestino.com.br/aluguel-de-veiculos</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
 <url><loc>https://guiameudestino.com.br/sobre</loc><lastmod>2026-11-04</lastmod><priority>0.5</priority></url>
 <url><loc>https://guiameudestino.com.br/contato</loc><lastmod>2026-11-04</lastmod><priority>0.5</priority></url>
+<url><loc>https://guiameudestino.com.br/produto/conjunto-3-malas-de-bordo-2-frasqueiras-abs-4-rodas-duplas-360-cadeado-embutido</loc><lastmod>2026-11-04</lastmod><priority>0.8</priority></url>
+<url><loc>https://guiameudestino.com.br/blog/reveillon-2027-rio-onde-ficar-deslocamentos</loc><lastmod>2026-11-04</lastmod><priority>0.7</priority></url>
 <url><loc>https://guiameudestino.com.br/blog/natal-luz-gramado-2026-2027-em-familia</loc><lastmod>2026-11-03</lastmod><priority>0.7</priority></url>
 <url><loc>https://guiameudestino.com.br/blog/feriado-20-novembro-2026-viagens-saindo-bh</loc><lastmod>2026-11-02</lastmod><priority>0.7</priority></url>
 <url><loc>https://guiameudestino.com.br/blog/md-teste-ouro-preto-002</loc><lastmod>2026-11-01</lastmod><priority>0.7</priority></url>
@@ -28,10 +28,10 @@
 <url><loc>https://guiameudestino.com.br/equipamentos?category=df488eb9-bf66-4bf3-b196-73f93b968fa8</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
 <url><loc>https://guiameudestino.com.br/veiculos?category=6d905940-a500-4576-b851-59b4a3d3c900</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
 <url><loc>https://guiameudestino.com.br/equipamentos?category=66e20c9c-c49f-4aff-b11b-656bd730f52f</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-<url><loc>https://guiameudestino.com.br/viagens?category=81c3acd7-a426-46a3-8736-5c3ad6721292</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
+<url><loc>https://guiameudestino.com.br/pacotes-de-viagem?category=81c3acd7-a426-46a3-8736-5c3ad6721292</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
 <url><loc>https://guiameudestino.com.br/equipamentos?category=c70f36f1-9a50-49fe-9fa9-5fcd04701058</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-<url><loc>https://guiameudestino.com.br/viagens?category=a70cf21f-748b-45ee-b092-bb819d474e28</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
+<url><loc>https://guiameudestino.com.br/pacotes-de-viagem?category=a70cf21f-748b-45ee-b092-bb819d474e28</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
 <url><loc>https://guiameudestino.com.br/veiculos?category=095de7af-fd96-43a1-8936-8907d2fa4386</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
-<url><loc>https://guiameudestino.com.br/viagens?category=bd974938-ffca-4ab6-87bf-dc2741886d75</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
+<url><loc>https://guiameudestino.com.br/pacotes-de-viagem?category=bd974938-ffca-4ab6-87bf-dc2741886d75</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
 <url><loc>https://guiameudestino.com.br/veiculos?category=7160ba64-7856-48fd-b3c2-6dfba35da356</loc><lastmod>2026-11-04</lastmod><priority>0.6</priority></url>
 </urlset>

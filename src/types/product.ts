@@ -110,6 +110,7 @@ export interface ListProductsParams {
   kind?: ProductKind;
   niche?: ProductNiche;
   category?: string;
+  featured?: boolean;
   partner?: string;
   modality?: string;
   level?: string;

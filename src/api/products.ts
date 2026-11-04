@@ -3,7 +3,7 @@ import type { ListProductsParams, Product, ProductCategory } from '../types/prod
 
 /**
  * Rotas públicas do backend-cm- (somente GET, anônimas):
- * - GET /api/products                 (paginado: category, commercialType, page, limit — só ativos)
+ * - GET /api/products                 (paginado: niche, category, featured, page, limit — só ativos)
  * - GET /api/products/:idOrSlug       (aceita UUID ou slug)
  * - GET /api/products/categories      (categorias ativas)
  * - GET /api/products/categories/:slugOrId
@@ -27,7 +27,7 @@ export const productsApi = {
 
   listNicheCategories: (niche?: string) => {
     const query = niche ? `?niche=${encodeURIComponent(niche)}` : '';
-    return apiGet<ProductCategory[]>(`/api/product-categories${query}`);
+    return apiGet<ProductCategory[]>(`/api/products/categories${query}`);
   },
 
   getCategory: (slugOrId: string) =>

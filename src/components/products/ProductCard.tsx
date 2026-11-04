@@ -11,11 +11,35 @@ export function ProductCard({ product }: { product: Product }) {
   const image = product.images?.[0];
   const cover = image?.url;
   const ctaLabel = kindCtaLabel(product.kind);
-
   const partner = product.partner;
+  const metadataValue =
+    product.niche === 'veiculos'
+      ? product.metadata?.transmissao ?? product.metadata?.transmission
+      : product.niche === 'equipamentos'
+        ? product.metadata?.marca ?? product.metadata?.brand
+        : undefined;
+  const metadataLabel =
+    product.niche === 'veiculos'
+      ? 'Transmissão'
+      : product.niche === 'equipamentos'
+        ? 'Marca'
+        : null;
+  const metadataText =
+    typeof metadataValue === 'string' || typeof metadataValue === 'number'
+      ? String(metadataValue).trim()
+      : '';
 
   return (
-    <Card className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
+    <Card className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
+      {partner?.logo_url ? (
+        <img
+          src={partner.logo_url}
+          alt={`Logo ${partner.nome}`}
+          loading="lazy"
+          className="absolute top-3 right-3 z-10 h-17 w-auto max-w-[176px] rounded-lg bg-white/90 p-2 object-contain shadow-sm"
+        />
+      ) : null}
+
       {/* Imagem */}
       {cover ? (
         <Link
@@ -47,14 +71,6 @@ export function ProductCard({ product }: { product: Product }) {
 
         {partner ? (
           <div className="flex items-center gap-1.5">
-            {partner.logo_url ? (
-              <img
-                src={partner.logo_url}
-                alt={partner.nome}
-                loading="lazy"
-                className="h-5 w-5 rounded object-contain"
-              />
-            ) : null}
             <Badge
               className={
                 product.kind === 'vehicle'
@@ -63,6 +79,14 @@ export function ProductCard({ product }: { product: Product }) {
               }
             >
               {partner.nome}
+            </Badge>
+          </div>
+        ) : null}
+
+        {metadataLabel && metadataText ? (
+          <div className="flex flex-wrap gap-1.5">
+            <Badge className="bg-slate-100 text-slate-700">
+              {metadataLabel}: {metadataText}
             </Badge>
           </div>
         ) : null}

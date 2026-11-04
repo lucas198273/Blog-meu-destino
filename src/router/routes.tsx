@@ -4,7 +4,7 @@ import { PublicLayout } from '../components/layout/PublicLayout';
 import { HomePage } from '../pages/HomePage';
 import { BlogListPage } from '../pages/BlogListPage';
 import { BlogPostPage } from '../pages/BlogPostPage';
-import { DestinationsPage } from '../pages/DestinationsPage';
+import { TravelPackagesPage } from '../pages/TravelPackagesPage';
 import { VehiclesPage } from '../pages/VehiclesPage';
 import { ProductPage } from '../pages/ProductPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
@@ -31,20 +31,21 @@ export const routes: RouteObject[] = [
       { path: 'blog/categorias', element: <BlogCategoriesPage /> },
       { path: 'blog/categoria/:slug', element: <BlogListPage /> },
       { path: 'blog/:slug', element: <BlogPostPage /> },
-      { path: 'destinos', element: <DestinationsPage /> },
+      { path: 'pacotes-de-viagem', element: <TravelPackagesPage /> },
+      { path: 'destinos', element: <Navigate to="/pacotes-de-viagem" replace /> },
+      { path: 'viagens', element: <Navigate to="/pacotes-de-viagem" replace /> },
       { path: 'aluguel-de-veiculos', element: <VehiclesPage /> },
       { path: 'equipamentos', element: <NicheProductsPage niche="equipamentos" /> },
       { path: 'veiculos', element: <NicheProductsPage niche="veiculos" /> },
-      { path: 'viagens', element: <NicheProductsPage niche="viagens" /> },
       { path: 'categorias', element: <ProductCategoriesPage /> },
       { path: 'destino/:slug', element: <ProductPage /> },
       { path: 'produto/:slug', element: <ProductDetailPage /> },
       { path: 'sobre', element: <AboutPage /> },
       { path: 'contato', element: <ContactPage /> },
       // Legado
-      { path: 'cursos', element: <Navigate to="/destinos" replace /> },
+      { path: 'cursos', element: <Navigate to="/pacotes-de-viagem" replace /> },
       { path: 'curso/:slug', element: <LegacyProductRedirect /> },
-      { path: 'produtos', element: <Navigate to="/destinos" replace /> },
+      { path: 'produtos', element: <Navigate to="/pacotes-de-viagem" replace /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

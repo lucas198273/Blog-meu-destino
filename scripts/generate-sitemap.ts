@@ -142,8 +142,7 @@ async function main() {
     { loc: '/categorias', lastmod: lastModified(), priority: 0.8 },
     { loc: '/veiculos', lastmod: lastModified(), priority: 0.8 },
     { loc: '/equipamentos', lastmod: lastModified(), priority: 0.8 },
-    { loc: '/viagens', lastmod: lastModified(), priority: 0.8 },
-    { loc: '/destinos', lastmod: lastModified(), priority: 0.8 },
+    { loc: '/pacotes-de-viagem', lastmod: lastModified(), priority: 0.8 },
     { loc: '/aluguel-de-veiculos', lastmod: lastModified(), priority: 0.8 },
     { loc: '/sobre', lastmod: lastModified(), priority: 0.5 },
     { loc: '/contato', lastmod: lastModified(), priority: 0.5 },
@@ -207,7 +206,7 @@ async function main() {
             : category.niche === 'equipamentos'
               ? '/equipamentos'
               : category.niche === 'viagens'
-                ? '/viagens'
+                ? '/pacotes-de-viagem'
                 : null;
         if (typeof category.id === 'string' && nichePath) {
           entries.push({

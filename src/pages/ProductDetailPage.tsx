@@ -135,7 +135,7 @@ export function ProductDetailPage() {
 
       <Container className="py-8 sm:py-12">
         <Link
-          to={data.niche === 'veiculos' ? '/veiculos' : data.niche === 'equipamentos' ? '/equipamentos' : '/viagens'}
+          to={data.niche === 'veiculos' ? '/veiculos' : data.niche === 'equipamentos' ? '/equipamentos' : '/pacotes-de-viagem'}
           className="text-sm font-medium text-[var(--color-primary)] hover:underline"
         >
           ← Voltar para ofertas

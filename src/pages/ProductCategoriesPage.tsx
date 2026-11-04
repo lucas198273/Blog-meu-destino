@@ -30,7 +30,7 @@ function ProductCategoryCard({
       ? '/veiculos'
       : niche === 'equipamentos'
         ? '/equipamentos'
-        : '/viagens';
+        : '/pacotes-de-viagem';
 
   return (
     <Link

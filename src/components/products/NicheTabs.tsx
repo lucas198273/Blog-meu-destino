@@ -5,7 +5,7 @@ import type { ProductNiche } from '../../types/product';
 const niches: Array<{ value: ProductNiche; label: string; to: string }> = [
   { value: 'veiculos', label: 'Veículos', to: '/veiculos' },
   { value: 'equipamentos', label: 'Equipamentos', to: '/equipamentos' },
-  { value: 'viagens', label: 'Viagens', to: '/viagens' },
+  { value: 'viagens', label: 'Viagens', to: '/pacotes-de-viagem' },
 ];
 
 export function NicheTabs({

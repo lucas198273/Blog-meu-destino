@@ -101,7 +101,7 @@ export function ProductPage() {
       <Container className="py-12">
         <ErrorState title="Destino não encontrado" />
         <Link
-          to="/destinos"
+          to="/pacotes-de-viagem"
           className="mt-4 inline-block text-sm text-[var(--color-primary)] hover:underline"
         >
           ← Voltar aos cursos
@@ -125,7 +125,7 @@ export function ProductPage() {
       </Helmet>
 
       <Container className="py-12">
-        <Link to="/destinos" className="text-sm text-[var(--color-primary)] hover:underline">
+        <Link to="/pacotes-de-viagem" className="text-sm text-[var(--color-primary)] hover:underline">
           ← Destinos
         </Link>
 
