@@ -14,6 +14,7 @@ import {
 } from '../hooks/useProducts';
 import type { ListProductsParams } from '../types/product';
 import { getCategoryTreeIds } from '../lib/categoryTree';
+import { canonicalUrl } from '../lib/seo';
 
 const PAGE_SIZE = 12;
 
@@ -76,11 +77,12 @@ export function VehiclesPage() {
   return (
     <>
       <Helmet>
-        <title>Aluguel de carros | Meu Destino</title>
+        <title>Aluguel de Carros e Veículos para Viagem | Meu Destino</title>
         <meta
           name="description"
-          content="Compare parceiros e encontre o carro ideal para sua próxima viagem."
+          content="Encontre carros para alugar nas melhores locadoras do Brasil e do mundo. Compare preços de SUVs, sedans e carros econômicos com nossos parceiros."
         />
+        <link rel="canonical" href={canonicalUrl('/veiculos')} />
       </Helmet>
 
       <section className="bg-gradient-to-br from-[#073b3e] via-[#0d5556] to-[#18736c] text-white">
@@ -89,10 +91,10 @@ export function VehiclesPage() {
             Liberdade para explorar
           </p>
           <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-            Encontre o carro ideal para sua viagem
+            Encontre o veículo ideal para sua viagem
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
-            Compare opções de parceiros confiáveis e siga viagem no seu ritmo.
+            Compare ofertas de aluguel nas maiores locadoras através dos nossos parceiros.
           </p>
         </Container>
       </section>

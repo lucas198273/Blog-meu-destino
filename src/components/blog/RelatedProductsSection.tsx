@@ -1,4 +1,5 @@
 import { usePostProducts } from '../../hooks/usePosts';
+import { ExternalLink } from 'lucide-react';
 import type { Product } from '../../types/product';
 import { formatPrice } from '../../lib/format';
 
@@ -70,7 +71,7 @@ function RelatedProductCard({ product }: { product: Product }) {
       {cover?.url ? (
         <img
           src={cover.url}
-          alt={cover.alt ?? product.nome}
+          alt={cover.alt?.trim() || `Imagem de ${product.nome}`}
           loading="lazy"
           className="aspect-[4/3] w-full object-cover"
         />
@@ -91,9 +92,10 @@ function RelatedProductCard({ product }: { product: Product }) {
             href={product.affiliate_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-10 items-center justify-center rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
           >
-            Ver Oferta
+            Ver Oferta no Parceiro
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </a>
         ) : null}
       </div>

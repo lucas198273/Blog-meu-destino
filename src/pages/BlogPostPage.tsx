@@ -11,6 +11,7 @@ import {
 } from '../components/blog/CategorySidebarList';
 import { RecentPostsList } from '../components/blog/RecentPostsList';
 import { RelatedProductsSection } from '../components/blog/RelatedProductsSection';
+import { canonicalUrl } from '../lib/seo';
 
 /** Estima tempo de leitura a partir do HTML do conteúdo (200 wpm). */
 function estimateReadingMinutes(html: string): number {
@@ -63,8 +64,9 @@ export function BlogPostPage() {
         <title>{data.meta_title ?? `${data.title} | Meu Destino`}</title>
         <meta
           name="description"
-          content={data.meta_description ?? (data.excerpt ?? '')}
+          content={data.meta_description ?? data.excerpt ?? `Leia ${data.title} no guia de viagens Meu Destino.`}
         />
+        <link rel="canonical" href={canonicalUrl(`/blog/${data.slug}`)} />
         {cover ? <meta property="og:image" content={cover} /> : null}
       </Helmet>
 
@@ -129,7 +131,7 @@ export function BlogPostPage() {
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
 
-            {/* Bloco de conversão — afiliado aluguel de carro */}
+            {/* Bloco para comparar ofertas relacionadas ao destino */}
             <div className="mx-auto mt-12 flex max-w-3xl flex-col items-start gap-6 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
               <div className="flex items-start gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E7F5F6]">
@@ -140,18 +142,18 @@ export function BlogPostPage() {
                     Vai viajar para cá? Compare preços de aluguel de carro
                   </h3>
                   <p className="mt-1 text-sm text-[#666666]">
-                    Compare ofertas de locadoras e reserve com segurança — sem
-                    custo adicional para você.
+                    Compare ofertas de locadoras e consulte as condições
+                    diretamente com cada parceiro.
                   </p>
                 </div>
               </div>
-              <a
-                href="#alugar-veiculo"
+              <Link
+                to="/veiculos"
                 className="inline-flex h-11 shrink-0 items-center gap-2 rounded-lg bg-[var(--color-accent)] px-5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
               >
-                Alugar Veículo
+                Comparar veículos
                 <ArrowRightIcon />
-              </a>
+              </Link>
             </div>
 
             <RelatedProductsSection postId={data.id} />

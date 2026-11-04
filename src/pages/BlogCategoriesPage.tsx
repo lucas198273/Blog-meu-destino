@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ErrorState } from '../components/common/ErrorState';
+import { canonicalUrl } from '../lib/seo';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
 import { useBlogCategories, usePosts } from '../hooks/usePosts';
@@ -54,6 +55,7 @@ export function BlogCategoriesPage() {
           name="description"
           content="Explore os artigos do Meu Destino por categoria."
         />
+        <link rel="canonical" href={canonicalUrl('/blog/categorias')} />
       </Helmet>
       <Container className="py-10 sm:py-14">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-800">

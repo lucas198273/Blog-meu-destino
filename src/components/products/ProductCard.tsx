@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
 import { formatPrice } from '../../lib/format';
-import { kindCtaLabel } from '../../types/product';
 import type { Product } from '../../types/product';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -10,7 +10,6 @@ import { Badge } from '../ui/Badge';
 export function ProductCard({ product }: { product: Product }) {
   const image = product.images?.[0];
   const cover = image?.url;
-  const ctaLabel = kindCtaLabel(product.kind);
   const partner = product.partner;
   const metadataValue =
     product.niche === 'veiculos'
@@ -49,7 +48,10 @@ export function ProductCard({ product }: { product: Product }) {
         >
           <img
             src={cover}
-            alt={image?.alt ?? product.nome}
+            alt={
+              image?.alt?.trim() ||
+              `Imagem de ${product.nome}${partner ? ` - oferta de ${partner.nome}` : ''}`
+            }
             loading="lazy"
             className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
@@ -108,16 +110,17 @@ export function ProductCard({ product }: { product: Product }) {
               href={product.affiliate_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-9 items-center rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
             >
-              {ctaLabel}
+              Ver Oferta no Parceiro
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
             </a>
           ) : (
             <Link
-              to={`/curso/${product.slug}`}
+              to={`/produto/${product.slug}`}
               className="inline-flex h-9 items-center rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
             >
-              {ctaLabel}
+              Ver detalhes
             </Link>
           )}
         </div>

@@ -27,7 +27,7 @@ const highlights = [
     icon: Backpack,
     title: 'Equipamentos de viagem',
     description:
-      'Mochilas, acessórios e o que você precisa levar — recomendações práticas antes de comprar.',
+      'Mochilas, acessórios e o que você precisa levar — recomendações práticas para escolher melhor.',
   },
 ];
 
@@ -112,7 +112,7 @@ export function AboutPage() {
         <div className="mt-14 flex flex-wrap justify-center gap-3">
           <ButtonLink to="/">Explorar Ofertas</ButtonLink>
           <ButtonLink to="/pacotes-de-viagem" variant="secondary">
-            Ver Pacotes de Viagem
+            Encontrar Pacotes
           </ButtonLink>
         </div>
 

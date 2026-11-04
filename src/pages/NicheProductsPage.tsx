@@ -15,27 +15,27 @@ import {
 import { trackEvent } from '../lib/analytics';
 import type { ListProductsParams, ProductNiche } from '../types/product';
 import { getCategoryTreeIds } from '../lib/categoryTree';
+import { canonicalUrl } from '../lib/seo';
 
 const PAGE_SIZE = 12;
 
 const nicheContent: Record<
   ProductNiche,
-  { title: string; description: string; label: string }
+  { title: string; description: string }
 > = {
   veiculos: {
     title: 'Encontre o veículo ideal para sua viagem',
-    description: 'Compare opções de parceiros e siga viagem no seu ritmo.',
-    label: 'Veículos para sua próxima viagem',
+    description:
+      'Compare ofertas de aluguel nas maiores locadoras através dos nossos parceiros.',
   },
   equipamentos: {
-    title: 'Equipamentos essenciais para sua viagem',
-    description: 'Escolhas práticas para fazer as malas e aproveitar cada destino.',
-    label: 'Itens para viajar melhor',
+    title: 'Equipamentos essenciais para sua próxima aventura',
+    description: 'Descubra malas, eletrônicos e itens de viagem em lojas parceiras.',
   },
   viagens: {
-    title: 'Planeje sua próxima viagem',
-    description: 'Descubra pacotes e experiências para sua próxima aventura.',
-    label: 'Ofertas para viajar',
+    title: 'Descubra pacotes de viagens inesquecíveis',
+    description:
+      'Encontre ofertas nacionais e internacionais e reserve diretamente com nossos parceiros.',
   },
 };
 
@@ -54,6 +54,12 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
   const partner = searchParams.get('partner')?.toLowerCase() ?? '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
   const content = nicheContent[niche];
+  const canonicalPath =
+    niche === 'veiculos'
+      ? '/veiculos'
+      : niche === 'equipamentos'
+        ? '/equipamentos'
+        : '/pacotes-de-viagem';
 
   const params = useMemo<ListProductsParams>(
     () => ({
@@ -96,8 +102,24 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
   return (
     <>
       <Helmet>
-        <title>{content.label} | Meu Destino</title>
-        <meta name="description" content={content.description} />
+        <title>
+          {niche === 'veiculos'
+            ? 'Aluguel de Carros e Veículos para Viagem | Meu Destino'
+            : niche === 'equipamentos'
+              ? 'Equipamentos de Viagem e Acessórios | Meu Destino'
+              : 'Pacotes de Viagens Nacionais e Internacionais | Meu Destino'}
+        </title>
+        <meta
+          name="description"
+          content={
+            niche === 'veiculos'
+              ? 'Encontre carros para alugar nas melhores locadoras do Brasil e do mundo. Compare preços de SUVs, sedans e carros econômicos com nossos parceiros.'
+              : niche === 'equipamentos'
+                ? 'Encontre malas, eletrônicos e itens de camping com os melhores preços. Descubra equipamentos essenciais para sua aventura nas lojas parceiras.'
+                : 'Descubra pacotes de viagens, passagens e hospedagens para os melhores destinos. Encontre ofertas exclusivas em nossas agências parceiras.'
+          }
+        />
+        <link rel="canonical" href={canonicalUrl(canonicalPath)} />
       </Helmet>
 
       <section className="bg-gradient-to-br from-[#073b3e] via-[#0d5556] to-[#18736c] text-white">

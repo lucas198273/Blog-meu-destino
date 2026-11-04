@@ -133,19 +133,3 @@ export const PRODUCT_KIND_LABELS: Record<ProductKind, string> = {
   experience: 'Experiência',
   destination: 'Destino',
 };
-
-/** CTA principal do card, por `kind` (ex: "Alugar Agora" para vehicle). */
-export function kindCtaLabel(kind: Product['kind']): string {
-  switch (kind) {
-    case 'vehicle':
-      return 'Alugar Agora';
-    case 'package':
-      return 'Ver Pacote';
-    case 'gear':
-      return 'Comprar Agora';
-    case 'experience':
-      return 'Reservar Experiência';
-    default:
-      return 'Ver Oferta';
-  }
-}

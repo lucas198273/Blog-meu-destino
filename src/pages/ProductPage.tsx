@@ -24,6 +24,7 @@ import { Container } from '../components/ui/Container';
 import { Badge } from '../components/ui/Badge';
 import { PageLoader } from '../components/ui/Spinner';
 import { ErrorState } from '../components/common/ErrorState';
+import { canonicalUrl } from '../lib/seo';
 
 /** Linha de "ícone + label + valor". Não renderiza se `value` for nulo. */
 function InfoItem({
@@ -119,9 +120,11 @@ export function ProductPage() {
     <>
       <Helmet>
         <title>{data.meta_title ?? `${data.nome} | Meu Destino`}</title>
-        {data.meta_description ? (
-          <meta name="description" content={data.meta_description} />
-        ) : null}
+        <meta
+          name="description"
+          content={data.meta_description ?? data.descricao ?? `Conheça ${data.nome} e encontre opções para sua viagem.`}
+        />
+        <link rel="canonical" href={canonicalUrl(`/destino/${data.slug}`)} />
       </Helmet>
 
       <Container className="py-12">
@@ -135,7 +138,7 @@ export function ProductPage() {
             {cover ? (
               <img
                 src={cover.url}
-                alt={cover.alt || data.nome}
+                alt={cover.alt?.trim() || `Imagem de ${data.nome}`}
                 className="aspect-[4/3] w-full rounded-xl object-cover"
               />
             ) : (
@@ -161,7 +164,7 @@ export function ProductPage() {
                   {partner.logo_url ? (
                     <img
                       src={partner.logo_url}
-                      alt={partner.nome}
+                      alt={`Logotipo de ${partner.nome}`}
                       loading="lazy"
                       className="h-7 max-w-[110px] object-contain"
                     />
@@ -196,24 +199,24 @@ export function ProductPage() {
 
               <div className="mt-5 flex flex-col gap-3">
                 {/* CTA primário — laranja, uso estrito de conversão */}
-                <a
-                  href="#alugar-veiculo"
+                <Link
+                  to="/veiculos"
                   className="inline-flex h-11 items-center justify-center rounded-lg bg-[var(--color-accent)] px-5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
                 >
-                  Alugar Veículo para este Destino
-                </a>
+                  Comparar veículos para este destino
+                </Link>
                 {/* CTA secundário — azul */}
-                <a
-                  href="#pacotes-cvc"
+                <Link
+                  to="/pacotes-de-viagem"
                   className="inline-flex h-11 items-center justify-center rounded-lg border-2 border-[var(--color-primary)] bg-white px-5 text-sm font-semibold text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)] hover:text-white"
                 >
-                  Ver Pacotes CVC
-                </a>
+                  Encontrar pacotes de viagem
+                </Link>
               </div>
 
               <p className="mt-4 text-[11px] leading-relaxed text-slate-400">
-                Este site contém links de afiliados. Você não paga nada a mais
-                por isso.
+                As ofertas e reservas são realizadas diretamente com nossos
+                parceiros. Alguns links podem gerar comissão sem custo adicional.
               </p>
             </div>
           </aside>
@@ -282,7 +285,7 @@ export function ProductPage() {
               {data.coordinator_photo_url ? (
                 <img
                   src={data.coordinator_photo_url}
-                  alt={data.coordinator_name}
+                  alt={`Foto de ${data.coordinator_name}`}
                   loading="lazy"
                   className="h-20 w-20 shrink-0 rounded-full object-cover"
                 />

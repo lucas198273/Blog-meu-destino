@@ -17,6 +17,7 @@ import {
 } from '../hooks/useProducts';
 import type { ListProductsParams } from '../types/product';
 import { getCategoryTreeIds } from '../lib/categoryTree';
+import { canonicalUrl } from '../lib/seo';
 
 const PAGE_SIZE = 12;
 
@@ -65,11 +66,12 @@ export function TravelPackagesPage() {
   return (
     <>
       <Helmet>
-        <title>Pacotes de viagem | Meu Destino</title>
+        <title>Pacotes de Viagens Nacionais e Internacionais | Meu Destino</title>
         <meta
           name="description"
-          content="Inspire-se com guias de viagem e encontre pacotes para sua próxima aventura."
+          content="Descubra pacotes de viagens, passagens e hospedagens para os melhores destinos. Encontre ofertas exclusivas em nossas agências parceiras."
         />
+        <link rel="canonical" href={canonicalUrl('/pacotes-de-viagem')} />
       </Helmet>
 
       <section className="bg-gradient-to-br from-[#073b3e] via-[#0d5556] to-[#18736c] text-white">
@@ -78,10 +80,10 @@ export function TravelPackagesPage() {
             Pacotes para sua próxima aventura
           </p>
           <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-            Encontre seu próximo pacote de viagem
+            Descubra pacotes de viagens inesquecíveis
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
-            Explore ofertas de viagem selecionadas para transformar sua inspiração em roteiro.
+            Encontre as melhores ofertas nacionais e internacionais e reserve diretamente com nossos parceiros.
           </p>
         </Container>
       </section>

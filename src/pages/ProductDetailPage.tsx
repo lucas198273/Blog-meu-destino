@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { ArrowUpRight, ImageOff, Tag } from 'lucide-react';
+import { ExternalLink, ImageOff, Tag } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { ErrorState } from '../components/common/ErrorState';
 import { ProductGrid } from '../components/products/ProductGrid';
@@ -10,6 +10,7 @@ import { useProduct, useRelatedProducts } from '../hooks/useProducts';
 import { trackEvent } from '../lib/analytics';
 import { formatPrice } from '../lib/format';
 import type { ProductNiche } from '../types/product';
+import { canonicalUrl } from '../lib/seo';
 
 const metadataLabels: Record<ProductNiche, Record<string, string>> = {
   veiculos: {
@@ -128,9 +129,11 @@ export function ProductDetailPage() {
     <>
       <Helmet>
         <title>{data.meta_title ?? `${data.nome} | Meu Destino`}</title>
-        {data.meta_description ? (
-          <meta name="description" content={data.meta_description} />
-        ) : null}
+        <meta
+          name="description"
+          content={data.meta_description ?? data.descricao ?? `Conheça ${data.nome} e compare esta oferta com nossos parceiros.`}
+        />
+        <link rel="canonical" href={canonicalUrl(`/produto/${data.slug}`)} />
       </Helmet>
 
       <Container className="py-8 sm:py-12">
@@ -147,7 +150,8 @@ export function ProductDetailPage() {
               {activeImage?.url ? (
                 <img
                   src={activeImage.url}
-                  alt={activeImage.alt ?? data.nome}
+                  alt={activeImage.alt?.trim() || `Imagem de ${data.nome}`}
+                  fetchPriority="high"
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -195,7 +199,8 @@ export function ProductDetailPage() {
                 {partner.logo_url ? (
                   <img
                     src={partner.logo_url}
-                    alt={`Logo ${partner.nome}`}
+                    alt={`Logotipo de ${partner.nome}`}
+                    loading="lazy"
                     className="h-11 w-16 rounded-md object-contain"
                   />
                 ) : (
@@ -212,7 +217,7 @@ export function ProductDetailPage() {
                       rel="noopener noreferrer"
                       className="text-sm font-semibold text-[var(--color-primary)] hover:underline"
                     >
-                      {partner.nome} <ArrowUpRight className="inline h-3.5 w-3.5" />
+                      {partner.nome} <ExternalLink className="inline h-3.5 w-3.5" aria-hidden="true" />
                     </a>
                   ) : (
                     <p className="text-sm font-semibold text-slate-900">{partner.nome}</p>
@@ -243,11 +248,11 @@ export function ProductDetailPage() {
                 disabled={!affiliateUrl}
                 className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-5 text-sm font-bold text-white transition-colors hover:bg-[var(--color-accent-dark)] disabled:cursor-not-allowed disabled:bg-slate-300"
               >
-                {affiliateUrl ? 'Comprar / Ver Oferta' : 'Oferta indisponível'}
-                {affiliateUrl ? <ArrowUpRight className="h-4 w-4" /> : null}
+                {affiliateUrl ? 'Ver Oferta no Parceiro' : 'Oferta indisponível'}
+                {affiliateUrl ? <ExternalLink className="h-4 w-4" aria-hidden="true" /> : null}
               </button>
               <p className="mt-3 text-xs leading-relaxed text-slate-500">
-                Este site pode receber comissão por compras realizadas por links de afiliados.
+                Você será redirecionado para o site do nosso parceiro para concluir sua reserva ou compra com segurança.
               </p>
             </div>
           </section>

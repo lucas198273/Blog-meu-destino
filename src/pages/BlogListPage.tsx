@@ -14,6 +14,7 @@ import { CategoryFilter } from '../components/blog/CategoryFilter';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { Pagination } from '../components/common/Pagination';
+import { canonicalUrl } from '../lib/seo';
 
 const PAGE_SIZE = 9;
 
@@ -53,12 +54,16 @@ export function BlogListPage() {
   }
 
   const name = currentName();
+  const canonicalPath = activeCategory
+    ? `/blog/categoria/${activeCategory.slug}`
+    : '/blog';
 
   return (
     <>
       <Helmet>
         <title>{name ? `${name} | Blog de Viagens` : 'Blog | Blog de Viagens'}</title>
         <meta name="description" content="Todos os posts do blog: roteiros, destinos e dicas." />
+        <link rel="canonical" href={canonicalUrl(canonicalPath)} />
       </Helmet>
       <Container className="py-12">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">

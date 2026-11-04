@@ -6,6 +6,7 @@ import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
 import { useNicheProductCategories, useProducts } from '../hooks/useProducts';
 import type { ProductCategory, ProductNiche } from '../types/product';
+import { canonicalUrl } from '../lib/seo';
 
 function ProductCategoryCard({
   category,
@@ -41,7 +42,7 @@ function ProductCategoryCard({
         {category.cover_image_url ? (
           <img
             src={category.cover_image_url}
-            alt=""
+            alt={`Categoria ${category.nome}`}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -93,6 +94,7 @@ export function ProductCategoriesPage() {
           name="description"
           content="Encontre produtos, equipamentos e ofertas por categoria."
         />
+        <link rel="canonical" href={canonicalUrl('/categorias')} />
       </Helmet>
       <Container className="py-10 sm:py-14">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-800">

@@ -24,6 +24,7 @@ export function Footer() {
               <img
                 src="/assets/logo.webp"
                 alt="Meu Destino"
+                loading="lazy"
                 className="h-[76.8px] w-auto rounded-lg bg-white p-1"
               />
             </Link>
@@ -32,10 +33,10 @@ export function Footer() {
               Viagens • Destinos • Experiências
             </p>
 
-            {/* Selos textuais de parceria */}
+            {/* Categorias de parceiros */}
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold text-slate-600">
-                Parceiro CVC
+                Operadoras de viagem
               </span>
               <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold text-slate-600">
                 Aluguel de Carros
@@ -129,11 +130,15 @@ export function Footer() {
           </div>
         </div>
 
+        <p className="mt-8 text-xs leading-relaxed text-slate-500">
+          O Meu Destino é um guia de recomendações. Nós não vendemos produtos.
+          As transações são realizadas diretamente nos sites dos nossos parceiros.
+        </p>
+
         {/* Disclaimer de afiliados */}
         <p className="mt-10 text-[11px] leading-relaxed text-slate-400">
-          Este site contém links de afiliados. Ao comprar através deles, podemos
-          receber uma comissão sem custo adicional para você. Os preços e
-          disponibilidade podem variar nos sites dos parceiros.
+          Alguns links podem gerar comissão para o Meu Destino, sem custo
+          adicional. Preços e disponibilidade são definidos pelos parceiros.
         </p>
 
         {/* Linha inferior */}

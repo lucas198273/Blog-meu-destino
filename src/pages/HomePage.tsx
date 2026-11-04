@@ -16,6 +16,7 @@ import { PostList } from '../components/blog/PostList';
 import { ProductGrid } from '../components/products/ProductGrid';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
+import { canonicalUrl } from '../lib/seo';
 
 const POSTS_LIMIT = 9;
 const FEATURED_LIMIT = 3;
@@ -88,11 +89,12 @@ export function HomePage() {
   return (
     <>
       <Helmet>
-        <title>Início | Meu Destino</title>
+        <title>Meu Destino - Guia de Viagens, Aluguel de Carros e Pacotes</title>
         <meta
           name="description"
-          content="Roteiros, destinos e pontos turísticos — planeje sua próxima viagem com o Meu Destino."
+          content="Encontre as melhores ofertas de viagens. Compare aluguel de veículos, pacotes nacionais, internacionais e equipamentos essenciais para sua aventura."
         />
+        <link rel="canonical" href={canonicalUrl('/')} />
       </Helmet>
 
       {/* Hero — banner fixo de fundo (1200×400) */}
@@ -115,22 +117,22 @@ export function HomePage() {
         <Container className="relative min-h-[340px] py-16 sm:min-h-[460px] sm:py-24">
           <div className="max-w-2xl text-white">
             <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-5xl">
-              Sua próxima <span className="text-[var(--color-accent)]">viagem</span> começa aqui
+              Encontre as melhores ofertas para a sua próxima viagem
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/85 sm:text-base">
-              Roteiros, pontos turísticos e dicas reais para explorar o Brasil e
-              o mundo — com pacotes e aluguel de carros na palma da mão.
+              Seu guia definitivo para comparar veículos, descobrir pacotes e
+              encontrar equipamentos junto aos nossos parceiros.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink to="/blog">Explorar Destinos</ButtonLink>
               <ButtonLink to="/pacotes-de-viagem" variant="secondary">
-                Ver Pacotes CVC
+                Encontrar Pacotes
               </ButtonLink>
               <ButtonLink
                 to="/aluguel-de-veiculos"
                 className="bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-dark)]"
               >
-                Alugar Veículo
+                Comparar Veículos
               </ButtonLink>
             </div>
           </div>

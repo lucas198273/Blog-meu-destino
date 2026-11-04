@@ -14,6 +14,7 @@ import {
 } from '../hooks/useProducts';
 import type { ListProductsParams } from '../types/product';
 import { getCategoryTreeIds } from '../lib/categoryTree';
+import { canonicalUrl } from '../lib/seo';
 
 const PAGE_SIZE = 16;
 
@@ -80,11 +81,12 @@ export function GearPage() {
   return (
     <>
       <Helmet>
-        <title>Equipamentos de viagem | Meu Destino</title>
+        <title>Equipamentos de Viagem e Acessórios | Meu Destino</title>
         <meta
           name="description"
-          content="Encontre malas, acessórios e equipamentos essenciais para viajar melhor."
+          content="Encontre malas, eletrônicos e itens de camping com os melhores preços. Descubra equipamentos essenciais para sua aventura nas lojas parceiras."
         />
+        <link rel="canonical" href={canonicalUrl('/equipamentos')} />
       </Helmet>
 
       <section className="bg-gradient-to-br from-[#fff8ed] via-[#fff3df] to-[#f8e6c6]">
@@ -93,11 +95,11 @@ export function GearPage() {
             Prepare-se para ir mais longe
           </p>
           <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            Equipamentos essenciais para sua viagem
+            Equipamentos essenciais para sua próxima aventura
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            Escolhas práticas para fazer as malas, explorar e aproveitar cada
-            destino.
+            Os melhores preços em malas, eletrônicos e itens de viagem
+            diretamente em nossas lojas parceiras.
           </p>
         </Container>
       </section>
