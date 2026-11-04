@@ -1,7 +1,12 @@
-﻿import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link, useParams } from 'react-router-dom';
-import { useBlogCategories, useBlogCategory, usePosts } from '../hooks/usePosts';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  useBlogCategories,
+  useBlogCategory,
+  usePostsForCategoryTree,
+} from '../hooks/usePosts';
+import { getCategoryTreeIds } from '../lib/categoryTree';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
 import { PostList } from '../components/blog/PostList';
@@ -14,28 +19,31 @@ const PAGE_SIZE = 9;
 
 export function BlogListPage() {
   const { slug: slugParam } = useParams<{ slug?: string }>();
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [category, setCategory] = useState<string | null>(null);
   const categories = useBlogCategories();
 
-  /** slug da URL tem precedência; se não existir, cai no estado interno (null = Todas). */
-  const activeSlug = slugParam ?? category;
+  const activeSlug = slugParam ?? null;
   const activeCategory = categories.data?.find((cat) => cat.slug === activeSlug);
   const activeId = activeCategory?.id ?? null;
   const isSlugValid = !slugParam || activeCategory !== undefined;
+  const categoryIds = useMemo(
+    () => getCategoryTreeIds(categories.data ?? [], activeId),
+    [activeId, categories.data],
+  );
 
   const categoryDetail = useBlogCategory(slugParam ?? '');
 
-  const posts = usePosts({
-    page,
-    limit: PAGE_SIZE,
-    category: activeId ?? undefined,
-  });
+  const posts = usePostsForCategoryTree({ page, limit: PAGE_SIZE }, categoryIds);
   const meta = posts.data?.meta;
 
-  function handleCategory(next: string | null) {
-    setCategory(next);
+  function handleCategory(nextId: string | null) {
     setPage(1);
+    const nextCategory = categories.data?.find((cat) => cat.id === nextId);
+    navigate(
+      nextCategory ? `/blog/categoria/${nextCategory.slug}` : '/blog',
+      { replace: true, preventScrollReset: true },
+    );
   }
 
   function currentName() {
@@ -74,7 +82,7 @@ export function BlogListPage() {
           <div className="mb-8">
             <CategoryFilter
               categories={categories.data}
-              selected={activeSlug}
+              selected={activeId}
               onSelect={handleCategory}
             />
           </div>

@@ -8,8 +8,12 @@ import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { PageLoader } from '../components/ui/Spinner';
 import { Pagination } from '../components/common/Pagination';
-import { useProducts } from '../hooks/useProducts';
+import {
+  useNicheProductCategories,
+  useProductsForCategoryTree,
+} from '../hooks/useProducts';
 import type { ListProductsParams } from '../types/product';
+import { getCategoryTreeIds } from '../lib/categoryTree';
 
 const PAGE_SIZE = 16;
 
@@ -21,6 +25,16 @@ function parsePrice(value: string | null): number | undefined {
 
 export function GearPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const categories = useNicheProductCategories('equipamentos');
+  const rawCategory = searchParams.get('category');
+  const selectedCategory = categories.data?.find(
+    (item) => item.id === rawCategory || item.slug === rawCategory,
+  );
+  const category = selectedCategory?.id ?? null;
+  const categoryIds = useMemo(
+    () => getCategoryTreeIds(categories.data ?? [], category),
+    [categories.data, category],
+  );
   const selectedPartner = searchParams.get('partner')?.toLowerCase() ?? '';
   const partner = selectedPartner;
   const minPriceValue = searchParams.get('min_price') ?? '';
@@ -40,7 +54,7 @@ export function GearPage() {
     }),
     [page, partner, minPrice, maxPrice],
   );
-  const products = useProducts(params);
+  const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
 
   function updateParams(changes: Record<string, string | null>) {
@@ -50,15 +64,16 @@ export function GearPage() {
       else next.delete(key);
     }
     next.delete('page');
-    setSearchParams(next);
+    setSearchParams(next, { replace: true, preventScrollReset: true });
   }
 
   function clearFilters() {
-    setSearchParams({});
+    setSearchParams({}, { replace: true, preventScrollReset: true });
   }
 
   const activeCount =
     Number(Boolean(partner)) +
+    Number(Boolean(category)) +
     Number(minPrice !== undefined) +
     Number(maxPrice !== undefined);
 
@@ -91,10 +106,14 @@ export function GearPage() {
         <DestinationFilters
           pageType="gear"
           partner={partner}
+          category={category}
+          categories={categories.data ?? []}
+          categoriesLoading={categories.isLoading}
           minPrice={minPriceValue}
           maxPrice={maxPriceValue}
           activeCount={activeCount}
           onPartnerChange={(value) => updateParams({ partner: value || null })}
+          onCategoryChange={(value) => updateParams({ category: value })}
           onMinPriceChange={(value) =>
             updateParams({ min_price: value || null })
           }
@@ -138,7 +157,7 @@ export function GearPage() {
                   setSearchParams((current) => {
                     current.set('page', String(nextPage));
                     return current;
-                  })
+                  }, { preventScrollReset: true })
                 }
               />
             ) : null}

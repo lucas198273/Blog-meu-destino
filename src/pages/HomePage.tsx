@@ -1,8 +1,13 @@
 ﻿import { useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
-import { useBlogCategories, usePosts } from '../hooks/usePosts';
+import {
+  useBlogCategories,
+  usePosts,
+  usePostsForCategoryTree,
+} from '../hooks/usePosts';
 import { useProducts } from '../hooks/useProducts';
+import { getCategoryTreeIds } from '../lib/categoryTree';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
 import { ButtonLink } from '../components/ui/Button';
@@ -14,8 +19,6 @@ import { ErrorState } from '../components/common/ErrorState';
 
 const POSTS_LIMIT = 9;
 const FEATURED_LIMIT = 3;
-const PRODUCTS_LIMIT = 3;
-
 /** Caminho do banner do hero. */
 const HERO_BANNER_SRC = '/assets/bloghero.png';
 
@@ -31,28 +34,55 @@ export function HomePage() {
     return exists ? slugFromUrl : null;
   }, [slugFromUrl, categories.data]);
 
+  const activeCategory = categories.data?.find((cat) => cat.slug === activeSlug);
+  const categoryIds = useMemo(
+    () => getCategoryTreeIds(categories.data ?? [], activeCategory?.id ?? null),
+    [activeCategory?.id, categories.data],
+  );
   const filteredParams = useMemo(
-    () => ({ limit: POSTS_LIMIT, category: activeSlug ?? undefined }),
-    [activeSlug],
+    () => ({ limit: POSTS_LIMIT }),
+    [],
   );
   const featuredParams = useMemo(
     () => ({ limit: FEATURED_LIMIT, featured: true }),
     [],
   );
-  const productsParams = useMemo(
-    () => ({ featured: true, limit: PRODUCTS_LIMIT }),
-    [],
-  );
-
-  const filteredPosts = usePosts(filteredParams);
+  const treeFilteredPosts = usePostsForCategoryTree(filteredParams, categoryIds);
   const featuredPosts = usePosts(featuredParams);
-  const products = useProducts(productsParams);
+  const vehicleFeatured = useProducts({ niche: 'veiculos', featured: true, limit: 1 });
+  const vehicleFallback = useProducts({ niche: 'veiculos', limit: 1 });
+  const gearFeatured = useProducts({ niche: 'equipamentos', featured: true, limit: 1 });
+  const gearFallback = useProducts({ niche: 'equipamentos', limit: 1 });
+  const travelFeatured = useProducts({ niche: 'viagens', featured: true, limit: 1 });
+  const travelFallback = useProducts({ niche: 'viagens', limit: 1 });
+  const offerQueries = [
+    vehicleFeatured,
+    vehicleFallback,
+    gearFeatured,
+    gearFallback,
+    travelFeatured,
+    travelFallback,
+  ];
+  const productsLoading = offerQueries.some((query) => query.isLoading);
+  const failedNiches = [
+    [vehicleFeatured, vehicleFallback],
+    [gearFeatured, gearFallback],
+    [travelFeatured, travelFallback],
+  ].filter((queries) => queries.every((query) => query.isError));
+  const featuredProducts = [
+    vehicleFeatured.data?.items[0] ?? vehicleFallback.data?.items[0],
+    gearFeatured.data?.items[0] ?? gearFallback.data?.items[0],
+    travelFeatured.data?.items[0] ?? travelFallback.data?.items[0],
+  ].filter((product) => product !== undefined);
 
   const handleSelect = useCallback(
     (slug: string | null) => {
-      setSearchParams(slug ? { category: slug } : {});
+      const next = new URLSearchParams(searchParams);
+      if (slug) next.set('category', slug);
+      else next.delete('category');
+      setSearchParams(next, { replace: true, preventScrollReset: true });
     },
-    [setSearchParams],
+    [searchParams, setSearchParams],
   );
 
   return (
@@ -109,6 +139,25 @@ export function HomePage() {
 
       <Container className="py-16">
         <section>
+          <h2 className="mb-8 text-2xl font-bold text-[var(--color-primary)]">
+            Ofertas em destaque
+          </h2>
+          {productsLoading ? (
+            <PageLoader />
+          ) : failedNiches.length > 0 ? (
+            <ErrorState
+              message="Não foi possível carregar as ofertas."
+              onRetry={() => offerQueries.forEach((query) => void query.refetch())}
+            />
+          ) : null}
+          {!productsLoading && featuredProducts.length > 0 ? (
+            <ProductGrid products={featuredProducts} />
+          ) : !productsLoading && failedNiches.length === 0 ? (
+            <EmptyState title="Nenhuma oferta em destaque ainda" />
+          ) : null}
+        </section>
+
+        <section>
           <h2 className="mb-8 text-2xl font-bold text-slate-900">
             Posts em destaque
           </h2>
@@ -138,15 +187,15 @@ export function HomePage() {
               loading={categories.isLoading}
             />
           </div>
-          {filteredPosts.isLoading ? (
+          {treeFilteredPosts.isLoading ? (
             <PageLoader />
-          ) : filteredPosts.isError ? (
+          ) : treeFilteredPosts.isError ? (
             <ErrorState
               message="Não foi possível carregar os posts."
-              onRetry={() => filteredPosts.refetch()}
+              onRetry={() => treeFilteredPosts.refetch()}
             />
-          ) : filteredPosts.data && filteredPosts.data.items.length > 0 ? (
-            <PostList posts={filteredPosts.data.items} />
+          ) : treeFilteredPosts.data?.items.length ? (
+            <PostList posts={treeFilteredPosts.data.items} />
           ) : (
             <EmptyState
               title="Nenhum post encontrado"
@@ -155,23 +204,6 @@ export function HomePage() {
           )}
         </section>
 
-        <section className="mt-16">
-          <h2 className="mb-8 text-2xl font-bold text-[var(--color-primary)]">
-            Ofertas em destaque
-          </h2>
-          {products.isLoading ? (
-            <PageLoader />
-          ) : products.isError ? (
-            <ErrorState
-              message="Não foi possível carregar as ofertas."
-              onRetry={() => products.refetch()}
-            />
-          ) : products.data && products.data.items.length > 0 ? (
-            <ProductGrid products={products.data.items} />
-          ) : (
-            <EmptyState title="Nenhuma oferta em destaque ainda" />
-          )}
-        </section>
       </Container>
 
       {/* Seção institucional — contraste de marca com CTA para /sobre */}

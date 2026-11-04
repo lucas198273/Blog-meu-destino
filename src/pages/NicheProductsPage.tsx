@@ -8,9 +8,13 @@ import { NicheTabs } from '../components/products/NicheTabs';
 import { ProductGrid } from '../components/products/ProductGrid';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
-import { useNicheProductCategories, useProducts } from '../hooks/useProducts';
+import {
+  useNicheProductCategories,
+  useProductsForCategoryTree,
+} from '../hooks/useProducts';
 import { trackEvent } from '../lib/analytics';
 import type { ListProductsParams, ProductNiche } from '../types/product';
+import { getCategoryTreeIds } from '../lib/categoryTree';
 
 const PAGE_SIZE = 12;
 
@@ -39,9 +43,14 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const categories = useNicheProductCategories(niche);
   const rawCategory = searchParams.get('category');
-  const category = categories.data?.some((item) => item.id === rawCategory)
-    ? rawCategory
-    : null;
+  const selectedCategory = categories.data?.find(
+    (item) => item.id === rawCategory || item.slug === rawCategory,
+  );
+  const category = selectedCategory?.id ?? null;
+  const categoryIds = useMemo(
+    () => getCategoryTreeIds(categories.data ?? [], category),
+    [categories.data, category],
+  );
   const partner = searchParams.get('partner')?.toLowerCase() ?? '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
   const content = nicheContent[niche];
@@ -49,14 +58,13 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
   const params = useMemo<ListProductsParams>(
     () => ({
       niche,
-      category: category ?? undefined,
       partner: partner || undefined,
       page,
       limit: PAGE_SIZE,
     }),
-    [category, niche, page, partner],
+    [niche, page, partner],
   );
-  const products = useProducts(params);
+  const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
 
   function applyFilters(changes: Record<string, string | null>) {
@@ -66,7 +74,7 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
       else next.delete(key);
     }
     next.delete('page');
-    setSearchParams(next);
+    setSearchParams(next, { replace: true, preventScrollReset: true });
     const nextCategory = Object.prototype.hasOwnProperty.call(changes, 'category')
       ? changes.category
       : category;
@@ -81,7 +89,7 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
     setSearchParams((current) => {
       current.set('page', String(nextPage));
       return current;
-    });
+    }, { preventScrollReset: true });
     trackEvent('filter_products', { niche, category: category ?? '', page: nextPage });
   }
 

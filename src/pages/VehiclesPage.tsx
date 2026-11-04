@@ -8,8 +8,12 @@ import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { PageLoader } from '../components/ui/Spinner';
 import { Pagination } from '../components/common/Pagination';
-import { useProducts } from '../hooks/useProducts';
+import {
+  useNicheProductCategories,
+  useProductsForCategoryTree,
+} from '../hooks/useProducts';
 import type { ListProductsParams } from '../types/product';
+import { getCategoryTreeIds } from '../lib/categoryTree';
 
 const PAGE_SIZE = 12;
 
@@ -22,6 +26,16 @@ const VEHICLE_TYPES: Record<string, string> = {
 
 export function VehiclesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const categories = useNicheProductCategories('veiculos');
+  const rawCategory = searchParams.get('category');
+  const selectedCategory = categories.data?.find(
+    (item) => item.id === rawCategory || item.slug === rawCategory,
+  );
+  const category = selectedCategory?.id ?? null;
+  const categoryIds = useMemo(
+    () => getCategoryTreeIds(categories.data ?? [], category),
+    [categories.data, category],
+  );
   const partner = searchParams.get('partner')?.toLowerCase() ?? '';
   const selectedType = searchParams.get('vehicle_type')?.toLowerCase() ?? '';
   const vehicleType = VEHICLE_TYPES[selectedType] ? selectedType : '';
@@ -37,7 +51,7 @@ export function VehiclesPage() {
     }),
     [page, partner, vehicleType],
   );
-  const products = useProducts(params);
+  const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
 
   function updateParams(changes: Record<string, string | null>) {
@@ -47,14 +61,17 @@ export function VehiclesPage() {
       else next.delete(key);
     }
     next.delete('page');
-    setSearchParams(next);
+    setSearchParams(next, { replace: true, preventScrollReset: true });
   }
 
   function clearFilters() {
-    setSearchParams({});
+    setSearchParams({}, { replace: true, preventScrollReset: true });
   }
 
-  const activeCount = Number(Boolean(partner)) + Number(Boolean(vehicleType));
+  const activeCount =
+    Number(Boolean(partner)) +
+    Number(Boolean(vehicleType)) +
+    Number(Boolean(category));
 
   return (
     <>
@@ -84,9 +101,13 @@ export function VehiclesPage() {
         <DestinationFilters
           pageType="vehicle"
           partner={partner}
+          category={category}
+          categories={categories.data ?? []}
+          categoriesLoading={categories.isLoading}
           vehicleType={vehicleType}
           activeCount={activeCount}
           onPartnerChange={(value) => updateParams({ partner: value || null })}
+          onCategoryChange={(value) => updateParams({ category: value })}
           onVehicleTypeChange={(value) =>
             updateParams({ vehicle_type: value || null })
           }
@@ -129,7 +150,7 @@ export function VehiclesPage() {
                   setSearchParams((current) => {
                     current.set('page', String(nextPage));
                     return current;
-                  })
+                  }, { preventScrollReset: true })
                 }
               />
             ) : null}

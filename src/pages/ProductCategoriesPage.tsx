@@ -113,7 +113,7 @@ export function ProductCategoriesPage() {
               } else {
                 next.delete('niche');
               }
-              setSearchParams(next);
+              setSearchParams(next, { replace: true, preventScrollReset: true });
             }}
             className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
           >

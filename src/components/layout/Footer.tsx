@@ -24,7 +24,7 @@ export function Footer() {
               <img
                 src="/assets/logo.webp"
                 alt="Meu Destino"
-                className="h-16 w-auto rounded-lg bg-white p-1"
+                className="h-[76.8px] w-auto rounded-lg bg-white p-1"
               />
             </Link>
 

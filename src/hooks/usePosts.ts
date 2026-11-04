@@ -1,6 +1,7 @@
 ﻿import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { blogApi } from '../api/blog';
 import type { ListBlogPostsParams } from '../types/blog';
+import { listCategoryTreeItems } from '../lib/categoryTree';
 
 /**
  * Hooks do domÃ­nio blog. Todas as queries sÃ£o anÃ´nimas â€” o backend
@@ -10,6 +11,24 @@ export function usePosts(params: ListBlogPostsParams = {}) {
   return useQuery({
     queryKey: ['blog', 'posts', params],
     queryFn: () => blogApi.listPosts(params),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function usePostsForCategoryTree(
+  params: ListBlogPostsParams,
+  categoryIds: string[],
+) {
+  return useQuery({
+    queryKey: ['blog', 'posts', params, 'category-tree', categoryIds],
+    queryFn: () =>
+      categoryIds.length
+        ? listCategoryTreeItems(
+            (requestParams) => blogApi.listPosts(requestParams),
+            params,
+            categoryIds,
+          )
+        : blogApi.listPosts(params),
     placeholderData: keepPreviousData,
   });
 }

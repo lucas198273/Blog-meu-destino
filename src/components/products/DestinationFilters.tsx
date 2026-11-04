@@ -148,7 +148,7 @@ export function DestinationFilters({
       </div>
 
       {type === 'vehicle' ? (
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-3">
           <SelectFilter
             id="vehicle-partner"
             label="Parceiro"
@@ -156,6 +156,17 @@ export function DestinationFilters({
             options={partnerOptions}
             loading={partnersQuery.isLoading}
             onChange={(value) => onPartnerChange?.(value)}
+          />
+          <SelectFilter
+            id="vehicle-category"
+            label="Categoria"
+            value={category ?? ''}
+            options={categories.map((item) => ({
+              value: item.id,
+              label: item.nome,
+            }))}
+            loading={categoriesLoading}
+            onChange={(value) => onCategoryChange?.(value || null)}
           />
           <FilterPillGroup
             label="Tipo de veículo"
@@ -169,7 +180,7 @@ export function DestinationFilters({
       ) : null}
 
       {type === 'gear' ? (
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <SelectFilter
             id="gear-partner"
             label="Parceiro"
@@ -177,6 +188,17 @@ export function DestinationFilters({
             options={partnerOptions}
             loading={partnersQuery.isLoading}
             onChange={(value) => onPartnerChange?.(value)}
+          />
+          <SelectFilter
+            id="gear-category"
+            label="Categoria"
+            value={category ?? ''}
+            options={categories.map((item) => ({
+              value: item.id,
+              label: item.nome,
+            }))}
+            loading={categoriesLoading}
+            onChange={(value) => onCategoryChange?.(value || null)}
           />
           <fieldset>
             <legend className="mb-2 text-sm font-semibold text-slate-800">

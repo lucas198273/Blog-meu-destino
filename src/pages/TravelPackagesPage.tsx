@@ -11,8 +11,12 @@ import { ProductGrid } from '../components/products/ProductGrid';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
 import { usePosts } from '../hooks/usePosts';
-import { useNicheProductCategories, useProducts } from '../hooks/useProducts';
+import {
+  useNicheProductCategories,
+  useProductsForCategoryTree,
+} from '../hooks/useProducts';
 import type { ListProductsParams } from '../types/product';
+import { getCategoryTreeIds } from '../lib/categoryTree';
 
 const PAGE_SIZE = 12;
 
@@ -24,6 +28,10 @@ export function TravelPackagesPage() {
     (item) => item.slug === rawCategory || item.id === rawCategory,
   );
   const category = selectedCategory?.slug ?? null;
+  const categoryIds = useMemo(
+    () => getCategoryTreeIds(categories.data ?? [], selectedCategory?.id ?? null),
+    [categories.data, selectedCategory?.id],
+  );
   const partner = searchParams.get('partner')?.toLowerCase() ?? '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
@@ -31,15 +39,14 @@ export function TravelPackagesPage() {
   const params = useMemo<ListProductsParams>(
     () => ({
       niche: 'viagens',
-      category: category ?? undefined,
       partner: partner || undefined,
       page,
       limit: PAGE_SIZE,
       sort: 'display_order',
     }),
-    [category, partner, page],
+    [partner, page],
   );
-  const packages = useProducts(params);
+  const packages = useProductsForCategoryTree(params, categoryIds);
   const meta = packages.data?.meta;
 
   function updateParams(changes: Record<string, string | null>) {
@@ -49,7 +56,7 @@ export function TravelPackagesPage() {
       else next.delete(key);
     }
     next.delete('page');
-    setSearchParams(next);
+    setSearchParams(next, { replace: true, preventScrollReset: true });
   }
 
   const activeCount =
@@ -104,7 +111,9 @@ export function TravelPackagesPage() {
             activeCount={activeCount}
             onPartnerChange={(value) => updateParams({ partner: value || null })}
             onCategoryChange={(value) => updateParams({ category: value })}
-            onClear={() => setSearchParams({})}
+            onClear={() =>
+              setSearchParams({}, { replace: true, preventScrollReset: true })
+            }
             className="mb-7"
           />
 
@@ -136,7 +145,7 @@ export function TravelPackagesPage() {
                     setSearchParams((current) => {
                       current.set('page', String(nextPage));
                       return current;
-                    })
+                    }, { preventScrollReset: true })
                   }
                 />
               ) : null}
@@ -178,11 +187,13 @@ export function TravelPackagesPage() {
               onRetry={() => posts.refetch()}
             />
           ) : posts.data?.items.length ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
               {posts.data.items.map((post, index) => (
                 <div
                   key={post.id}
-                  className={index === 0 ? 'md:col-span-2 lg:col-span-2' : ''}
+                  className={`w-[280px] min-w-[280px] shrink-0 snap-start md:w-auto md:min-w-0 ${
+                    index === 0 ? 'md:col-span-2 lg:col-span-2' : ''
+                  }`}
                 >
                   <PostCard post={post} />
                 </div>

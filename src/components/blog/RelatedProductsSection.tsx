@@ -1,7 +1,6 @@
 import { usePostProducts } from '../../hooks/usePosts';
 import type { Product } from '../../types/product';
 import { formatPrice } from '../../lib/format';
-import { cn } from '../../lib/cn';
 
 interface RelatedProductsSectionProps {
   postId: string;
@@ -49,9 +48,14 @@ export function RelatedProductsSection({
       >
         {title}
       </h2>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
         {products.data.map((product) => (
-          <RelatedProductCard key={product.id} product={product} />
+          <div
+            key={product.id}
+            className="w-[280px] min-w-[280px] shrink-0 snap-start md:w-auto md:min-w-0"
+          >
+            <RelatedProductCard product={product} />
+          </div>
         ))}
       </div>
     </section>
@@ -99,19 +103,19 @@ function RelatedProductCard({ product }: { product: Product }) {
 
 function ProductGridSkeleton() {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
-          className={cn(
-            'overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm',
-          )}
+          className="w-[280px] min-w-[280px] shrink-0 snap-start md:w-auto md:min-w-0"
         >
-          <div className="aspect-square w-full animate-pulse bg-slate-100" />
-          <div className="flex flex-col gap-2.5 p-5">
-            <div className="h-4 w-3/4 animate-pulse rounded bg-slate-100" />
-            <div className="h-4 w-1/2 animate-pulse rounded bg-slate-100" />
-            <div className="h-5 w-24 animate-pulse rounded bg-slate-100" />
+          <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
+            <div className="aspect-square w-full animate-pulse bg-slate-100" />
+            <div className="flex flex-col gap-2.5 p-5">
+              <div className="h-4 w-3/4 animate-pulse rounded bg-slate-100" />
+              <div className="h-4 w-1/2 animate-pulse rounded bg-slate-100" />
+              <div className="h-5 w-24 animate-pulse rounded bg-slate-100" />
+            </div>
           </div>
         </div>
       ))}
