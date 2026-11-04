@@ -18,14 +18,18 @@ export function ProductCard({ product }: { product: Product }) {
     <Card className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
       {/* Imagem */}
       {cover ? (
-        <div className="block overflow-hidden">
+        <Link
+          to={`/produto/${product.slug}`}
+          aria-label={`Ver detalhes de ${product.nome}`}
+          className="block overflow-hidden"
+        >
           <img
             src={cover}
             alt={image?.alt ?? product.nome}
             loading="lazy"
             className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
-        </div>
+        </Link>
       ) : (
         <div className="flex aspect-square w-full items-center justify-center bg-slate-50 text-sm text-slate-400">
           Sem imagem
@@ -34,9 +38,12 @@ export function ProductCard({ product }: { product: Product }) {
 
       {/* Conteúdo */}
       <div className="flex flex-1 flex-col gap-2.5 p-5">
-        <span className="text-[16px] font-semibold leading-snug text-[var(--color-text)]">
+        <Link
+          to={`/produto/${product.slug}`}
+          className="text-[16px] font-semibold leading-snug text-[var(--color-text)] hover:text-[var(--color-primary)]"
+        >
           {product.nome}
-        </span>
+        </Link>
 
         {partner ? (
           <div className="flex items-center gap-1.5">

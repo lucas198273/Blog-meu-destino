@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useBlogCategories, useBlogCategory, usePosts } from '../hooks/usePosts';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
@@ -53,9 +53,17 @@ export function BlogListPage() {
         <meta name="description" content="Todos os posts do blog: roteiros, destinos e dicas." />
       </Helmet>
       <Container className="py-12">
-        <h1 className="mb-6 text-3xl font-bold text-slate-900">
-          {name ? `Categoria: ${name}` : 'Blog'}
-        </h1>
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <h1 className="text-3xl font-bold text-slate-900">
+            {name ? `Categoria: ${name}` : 'Blog'}
+          </h1>
+          <Link
+            to="/blog/categorias"
+            className="text-sm font-semibold text-teal-800 underline-offset-4 hover:underline"
+          >
+            Todas as categorias
+          </Link>
+        </div>
         {!isSlugValid ? (
           <EmptyState
             title="Categoria não encontrada"

@@ -25,6 +25,11 @@ export const productsApi = {
 
   listCategories: () => apiGet<ProductCategory[]>('/api/products/categories'),
 
+  listNicheCategories: (niche?: string) => {
+    const query = niche ? `?niche=${encodeURIComponent(niche)}` : '';
+    return apiGet<ProductCategory[]>(`/api/product-categories${query}`);
+  },
+
   getCategory: (slugOrId: string) =>
     apiGet<ProductCategory>(`/api/products/categories/${encodeURIComponent(slugOrId)}`),
 };

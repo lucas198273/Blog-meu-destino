@@ -1,6 +1,6 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { productsApi } from '../api/products';
-import type { ListProductsParams } from '../types/product';
+import type { ListProductsParams, ProductNiche } from '../types/product';
 
 /**
  * Hooks do domínio produtos. Queries anônimas — o backend
@@ -27,5 +27,20 @@ export function useProductCategories() {
   return useQuery({
     queryKey: ['products', 'categories'],
     queryFn: () => productsApi.listCategories(),
+  });
+}
+
+export function useNicheProductCategories(niche?: ProductNiche) {
+  return useQuery({
+    queryKey: ['products', 'categories', niche],
+    queryFn: () => productsApi.listNicheCategories(niche),
+  });
+}
+
+export function useRelatedProducts(niche: ProductNiche | undefined) {
+  return useQuery({
+    queryKey: ['products', 'related', niche],
+    queryFn: () => productsApi.listProducts({ niche, page: 1, limit: 5 }),
+    enabled: niche !== undefined,
   });
 }

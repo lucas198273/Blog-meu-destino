@@ -7,8 +7,9 @@ import { Container } from '../ui/Container';
 const navItems = [
   { to: '/', label: 'Início' },
   { to: '/destinos', label: 'Destinos' },
-  { to: '/aluguel-de-veiculos', label: 'Aluguel de Carros' },
+  { to: '/veiculos', label: 'Veículos' },
   { to: '/equipamentos', label: 'Equipamentos' },
+  { to: '/categorias', label: 'Categorias' },
   { to: '/blog', label: 'Blog' },
 ];
 

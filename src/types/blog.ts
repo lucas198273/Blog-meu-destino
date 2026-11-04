@@ -8,6 +8,8 @@ export interface BlogCategory {
   nome: string;
   slug: string;
   descricao: string | null;
+  post_count?: number;
+  posts_count?: number;
   parent_id: string | null;
   display_order: number;
   status: 'active' | 'archived';

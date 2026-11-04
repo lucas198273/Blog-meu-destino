@@ -9,6 +9,7 @@ export type ProductKind =
   | 'destination';
 export type ProductModality = 'presencial' | 'online' | 'hibrido';
 export type ProductLevel = 'iniciante' | 'intermediario' | 'avancado';
+export type ProductNiche = 'veiculos' | 'equipamentos' | 'viagens';
 
 export interface ProductImage {
   url: string;
@@ -20,6 +21,7 @@ export interface ProductImage {
 export interface PartnerSummary {
   nome: string;
   logo_url: string | null;
+  website_url?: string | null;
 }
 
 /** Parceiro retornado por GET /api/partners. */
@@ -47,6 +49,8 @@ export interface Product {
   created_at: string;
   updated_at: string;
   kind: ProductKind;
+  niche?: ProductNiche;
+  metadata?: Record<string, unknown> | null;
   affiliate_url: string | null;
   partner_id: string | null;
   partner?: PartnerSummary;
@@ -76,6 +80,13 @@ export interface ProductCategory {
   nome: string;
   slug: string;
   descricao: string | null;
+  niche?: ProductNiche | null;
+  cover_image_url?: string | null;
+  icon?: string | null;
+  product_count?: number;
+  products_count?: number;
+  post_count?: number;
+  posts_count?: number;
   parent_id: string | null;
   display_order: number;
   status: 'active' | 'archived';
@@ -97,6 +108,7 @@ export interface ListProductsParams {
   page?: number;
   limit?: number;
   kind?: ProductKind;
+  niche?: ProductNiche;
   category?: string;
   partner?: string;
   modality?: string;
