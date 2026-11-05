@@ -40,6 +40,7 @@ export function GearPage() {
   const partner = selectedPartner;
   const minPriceValue = searchParams.get('min_price') ?? '';
   const maxPriceValue = searchParams.get('max_price') ?? '';
+  const location = searchParams.get('location_slug') ?? '';
   const minPrice = parsePrice(minPriceValue);
   const maxPrice = parsePrice(maxPriceValue);
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
@@ -52,8 +53,9 @@ export function GearPage() {
       partner: partner || undefined,
       min_price: minPrice,
       max_price: maxPrice,
+      location_slug: location || undefined,
     }),
-    [page, partner, minPrice, maxPrice],
+    [page, partner, minPrice, maxPrice, location],
   );
   const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
@@ -75,6 +77,7 @@ export function GearPage() {
   const activeCount =
     Number(Boolean(partner)) +
     Number(Boolean(category)) +
+    Number(Boolean(location)) +
     Number(minPrice !== undefined) +
     Number(maxPrice !== undefined);
 
@@ -109,6 +112,7 @@ export function GearPage() {
           pageType="gear"
           partner={partner}
           category={category}
+          location={location}
           categories={categories.data ?? []}
           categoriesLoading={categories.isLoading}
           minPrice={minPriceValue}
@@ -116,6 +120,9 @@ export function GearPage() {
           activeCount={activeCount}
           onPartnerChange={(value) => updateParams({ partner: value || null })}
           onCategoryChange={(value) => updateParams({ category: value })}
+          onLocationChange={(value) =>
+            updateParams({ location_slug: value || null })
+          }
           onMinPriceChange={(value) =>
             updateParams({ min_price: value || null })
           }

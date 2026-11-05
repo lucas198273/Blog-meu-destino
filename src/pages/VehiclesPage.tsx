@@ -40,6 +40,7 @@ export function VehiclesPage() {
   const partner = searchParams.get('partner')?.toLowerCase() ?? '';
   const selectedType = searchParams.get('vehicle_type')?.toLowerCase() ?? '';
   const vehicleType = VEHICLE_TYPES[selectedType] ? selectedType : '';
+  const location = searchParams.get('location_slug') ?? '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const params = useMemo<ListProductsParams>(
@@ -48,9 +49,10 @@ export function VehiclesPage() {
       page,
       limit: PAGE_SIZE,
       partner: partner || undefined,
+      location_slug: location || undefined,
       tags: vehicleType ? VEHICLE_TYPES[vehicleType] : undefined,
     }),
-    [page, partner, vehicleType],
+    [page, partner, vehicleType, location],
   );
   const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
@@ -72,7 +74,8 @@ export function VehiclesPage() {
   const activeCount =
     Number(Boolean(partner)) +
     Number(Boolean(vehicleType)) +
-    Number(Boolean(category));
+    Number(Boolean(category)) +
+    Number(Boolean(location));
 
   return (
     <>
@@ -104,12 +107,16 @@ export function VehiclesPage() {
           pageType="vehicle"
           partner={partner}
           category={category}
+          location={location}
           categories={categories.data ?? []}
           categoriesLoading={categories.isLoading}
           vehicleType={vehicleType}
           activeCount={activeCount}
           onPartnerChange={(value) => updateParams({ partner: value || null })}
           onCategoryChange={(value) => updateParams({ category: value })}
+          onLocationChange={(value) =>
+            updateParams({ location_slug: value || null })
+          }
           onVehicleTypeChange={(value) =>
             updateParams({ vehicle_type: value || null })
           }

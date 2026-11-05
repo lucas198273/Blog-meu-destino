@@ -16,6 +16,7 @@ import { trackEvent } from '../lib/analytics';
 import type { ListProductsParams, ProductNiche } from '../types/product';
 import { getCategoryTreeIds } from '../lib/categoryTree';
 import { canonicalUrl } from '../lib/seo';
+import { useLocations } from '../hooks/useLocations';
 
 const PAGE_SIZE = 12;
 
@@ -42,6 +43,7 @@ const nicheContent: Record<
 export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const categories = useNicheProductCategories(niche);
+  const locations = useLocations();
   const rawCategory = searchParams.get('category');
   const selectedCategory = categories.data?.find(
     (item) => item.id === rawCategory || item.slug === rawCategory,
@@ -52,6 +54,7 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
     [categories.data, category],
   );
   const partner = searchParams.get('partner')?.toLowerCase() ?? '';
+  const location = searchParams.get('location_slug') ?? '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
   const content = nicheContent[niche];
   const canonicalPath =
@@ -65,10 +68,11 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
     () => ({
       niche,
       partner: partner || undefined,
+      location_slug: location || undefined,
       page,
       limit: PAGE_SIZE,
     }),
-    [niche, page, partner],
+    [niche, page, partner, location],
   );
   const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
@@ -164,6 +168,36 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
               </option>
             ))}
           </select>
+        </label>
+
+        <label className="mb-7 flex max-w-sm flex-col gap-2 text-sm font-medium text-slate-700">
+          Localização (destino)
+          <select
+            value={location}
+            onChange={(event) =>
+              applyFilters({ location_slug: event.currentTarget.value || null })
+            }
+            disabled={locations.isLoading}
+            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
+          >
+            <option value="">
+              {locations.isLoading ? 'Carregando destinos…' : 'Todos os destinos'}
+            </option>
+            {(locations.data ?? []).map((item) => (
+              <option key={item.id} value={item.slug}>
+                {item.nome}
+              </option>
+            ))}
+          </select>
+          {locations.isError ? (
+            <button
+              type="button"
+              onClick={() => locations.refetch()}
+              className="text-left text-xs text-red-700 underline"
+            >
+              Não foi possível carregar os destinos. Tentar novamente
+            </button>
+          ) : null}
         </label>
 
         <p className="mb-5 text-sm text-slate-500" aria-live="polite">

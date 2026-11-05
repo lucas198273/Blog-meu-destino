@@ -21,6 +21,7 @@ export interface BlogCategory {
 export interface BlogPost {
   id: string;
   category_id: string | null;
+  location_id?: string | null;
   title: string;
   slug: string;
   excerpt: string | null;
@@ -42,6 +43,7 @@ export interface ListBlogPostsParams {
   limit?: number;
   /** UUID da categoria de blog. */
   category?: string;
+  location_slug?: string;
   tag?: string;
   featured?: boolean;
 }

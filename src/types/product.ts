@@ -34,6 +34,7 @@ export interface Partner extends PartnerSummary {
 export interface Product {
   id: string;
   category_id: string | null;
+  location_id?: string | null;
   sku: string | null;
   nome: string;
   slug: string;
@@ -110,6 +111,7 @@ export interface ListProductsParams {
   kind?: ProductKind;
   niche?: ProductNiche;
   category?: string;
+  location_slug?: string;
   featured?: boolean;
   partner?: string;
   modality?: string;

@@ -34,6 +34,7 @@ export function TravelPackagesPage() {
     [categories.data, selectedCategory?.id],
   );
   const partner = searchParams.get('partner')?.toLowerCase() ?? '';
+  const location = searchParams.get('location_slug') ?? '';
   const page = Math.max(1, Number.parseInt(searchParams.get('page') ?? '1', 10) || 1);
 
   const posts = usePosts({ limit: 3 });
@@ -41,11 +42,12 @@ export function TravelPackagesPage() {
     () => ({
       niche: 'viagens',
       partner: partner || undefined,
+      location_slug: location || undefined,
       page,
       limit: PAGE_SIZE,
       sort: 'display_order',
     }),
-    [partner, page],
+    [partner, page, location],
   );
   const packages = useProductsForCategoryTree(params, categoryIds);
   const meta = packages.data?.meta;
@@ -61,7 +63,7 @@ export function TravelPackagesPage() {
   }
 
   const activeCount =
-    Number(Boolean(category)) + Number(Boolean(partner));
+    Number(Boolean(category)) + Number(Boolean(partner)) + Number(Boolean(location));
 
   return (
     <>
@@ -108,11 +110,15 @@ export function TravelPackagesPage() {
             pageType="destination"
             partner={partner}
             category={category}
+            location={location}
             categories={categories.data ?? []}
             categoriesLoading={categories.isLoading}
             activeCount={activeCount}
             onPartnerChange={(value) => updateParams({ partner: value || null })}
             onCategoryChange={(value) => updateParams({ category: value })}
+            onLocationChange={(value) =>
+              updateParams({ location_slug: value || null })
+            }
             onClear={() =>
               setSearchParams({}, { replace: true, preventScrollReset: true })
             }

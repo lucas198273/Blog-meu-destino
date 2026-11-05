@@ -4,6 +4,7 @@ import { formatPrice } from '../../lib/format';
 import type { Product } from '../../types/product';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
+import { LocationBadge } from '../common/LocationBadge';
 
 // Camada de apresentação: card de oferta (veículo, pacote, equipamento etc.)
 // consumindo `Product` do backend, com CTA de afiliado externo.
@@ -90,6 +91,12 @@ export function ProductCard({ product }: { product: Product }) {
             <Badge className="bg-slate-100 text-slate-700">
               {metadataLabel}: {metadataText}
             </Badge>
+          </div>
+        ) : null}
+
+        {product.location_id ? (
+          <div>
+            <LocationBadge locationId={product.location_id} />
           </div>
         ) : null}
 

@@ -12,6 +12,7 @@ import {
 import { RecentPostsList } from '../components/blog/RecentPostsList';
 import { RelatedProductsSection } from '../components/blog/RelatedProductsSection';
 import { canonicalUrl } from '../lib/seo';
+import { LocationBadge } from '../components/common/LocationBadge';
 
 /** Estima tempo de leitura a partir do HTML do conteúdo (200 wpm). */
 function estimateReadingMinutes(html: string): number {
@@ -88,16 +89,6 @@ export function BlogPostPage() {
               />
             ) : null}
 
-            {/* Eyebrow: barra verde + nome da categoria */}
-            {activeCategory ? (
-              <div className="mt-6 flex items-center gap-2">
-                <span className="h-[2px] w-8 rounded-full bg-[var(--color-accent)]" />
-                <span className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-primary)]">
-                  {activeCategory.nome}
-                </span>
-              </div>
-            ) : null}
-
             <h1 className="font-heading mt-3 text-3xl font-bold leading-tight tracking-tight text-[var(--color-primary)] sm:text-[34px]">
               {data.title}
             </h1>
@@ -115,6 +106,15 @@ export function BlogPostPage() {
                   <CalendarIcon />
                   {formatDate(data.published_at)}
                 </span>
+              ) : null}
+              {activeCategory ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
+                  {activeCategory.nome}
+                </span>
+              ) : null}
+              {data.location_id ? (
+                <LocationBadge locationId={data.location_id} inline />
               ) : null}
               <span className="inline-flex items-center gap-1.5">
                 <ClockIcon />

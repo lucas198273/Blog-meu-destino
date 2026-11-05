@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { BlogPost } from '../../types/blog';
 import { Card } from '../ui/Card';
+import { LocationBadge } from '../common/LocationBadge';
 
 export function PostCard({ post }: { post: BlogPost }) {
   const excerpt = post.excerpt?.trim();
@@ -36,6 +37,12 @@ export function PostCard({ post }: { post: BlogPost }) {
           <p className="line-clamp-2 text-sm leading-relaxed text-slate-600">
             {excerpt}
           </p>
+        ) : null}
+
+        {post.location_id ? (
+          <div>
+            <LocationBadge locationId={post.location_id} />
+          </div>
         ) : null}
 
         {/* Seta sutil no canto (estilo protótipo) */}

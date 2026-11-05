@@ -4,6 +4,7 @@ import { usePartners } from '../../hooks/usePartners';
 import type { ProductCategory } from '../../types/product';
 import { CategoryPills } from '../blog/CategoryPills';
 import { FilterPillGroup } from './FilterPillGroup';
+import { useLocations } from '../../hooks/useLocations';
 
 export type ProductPageType = 'vehicle' | 'gear' | 'destination';
 
@@ -19,6 +20,7 @@ interface DestinationFiltersProps {
   minPrice?: string;
   maxPrice?: string;
   category?: string | null;
+  location?: string;
   categories?: ProductCategory[];
   categoriesLoading?: boolean;
   activeCount: number;
@@ -27,6 +29,7 @@ interface DestinationFiltersProps {
   onMinPriceChange?: (price: string) => void;
   onMaxPriceChange?: (price: string) => void;
   onCategoryChange?: (category: string | null) => void;
+  onLocationChange?: (location: string) => void;
   onClear?: () => void;
   className?: string;
 }
@@ -50,6 +53,7 @@ function SelectFilter({
   value,
   options,
   loading = false,
+  emptyOptionLabel = 'Todos os parceiros',
   onChange,
 }: {
   id: string;
@@ -57,6 +61,7 @@ function SelectFilter({
   value: string;
   options: FilterOption[];
   loading?: boolean;
+  emptyOptionLabel?: string;
   onChange: (value: string) => void;
 }) {
   return (
@@ -73,7 +78,13 @@ function SelectFilter({
         onChange={(event) => onChange(event.target.value)}
         className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
       >
-        <option value="">{loading ? 'Carregando…' : options.length > 0 ? 'Todos os parceiros' : 'Nenhum parceiro cadastrado'}</option>
+        <option value="">
+          {loading
+            ? 'Carregando…'
+            : options.length > 0
+              ? emptyOptionLabel
+              : 'Nenhuma opção cadastrada'}
+        </option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -91,6 +102,7 @@ export function DestinationFilters({
   minPrice = '',
   maxPrice = '',
   category = null,
+  location = '',
   categories = [],
   categoriesLoading = false,
   activeCount,
@@ -99,6 +111,7 @@ export function DestinationFilters({
   onMinPriceChange,
   onMaxPriceChange,
   onCategoryChange,
+  onLocationChange,
   onClear,
   className,
 }: DestinationFiltersProps) {
@@ -108,6 +121,11 @@ export function DestinationFilters({
   // Opções do filtro de parceiros — exclusivamente do retorno da API
   // pública (GET /api/partners). Sem listas fixas/fallback.
   const partnersQuery = usePartners();
+  const locationsQuery = useLocations();
+  const locationOptions = (locationsQuery.data ?? []).map((locationItem) => ({
+    value: locationItem.slug,
+    label: locationItem.nome,
+  }));
   const partnersData = Array.isArray(partnersQuery.data)
     ? partnersQuery.data
     : [];
@@ -267,6 +285,27 @@ export function DestinationFilters({
           </div>
         </div>
       ) : null}
+
+      <div className="mt-5 max-w-sm">
+        <SelectFilter
+          id="product-location"
+          label="Localização (destino)"
+          value={location}
+          options={locationOptions}
+          loading={locationsQuery.isLoading}
+          emptyOptionLabel="Todos os destinos"
+          onChange={(value) => onLocationChange?.(value)}
+        />
+        {locationsQuery.isError ? (
+          <button
+            type="button"
+            onClick={() => locationsQuery.refetch()}
+            className="mt-2 text-left text-xs text-red-700 underline"
+          >
+            Não foi possível carregar os destinos. Tentar novamente
+          </button>
+        ) : null}
+      </div>
     </aside>
   );
 }
