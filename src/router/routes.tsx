@@ -16,6 +16,8 @@ import { ProductDetailPage } from '../pages/ProductDetailPage';
 import { BlogCategoriesPage } from '../pages/BlogCategoriesPage';
 import { ProductCategoriesPage } from '../pages/ProductCategoriesPage';
 import { NicheProductsPage } from '../pages/NicheProductsPage';
+import { TermsPage } from '../pages/TermsPage';
+import { PrivacyPage } from '../pages/PrivacyPage';
 
 /**
  * Todas as rotas sÃ£o pÃºblicas. Sem auth, sem admin, sem CRUD.
@@ -42,6 +44,8 @@ export const routes: RouteObject[] = [
       { path: 'produto/:slug', element: <ProductDetailPage /> },
       { path: 'sobre', element: <AboutPage /> },
       { path: 'contato', element: <ContactPage /> },
+      { path: 'termos-de-uso', element: <TermsPage /> },
+      { path: 'politica-de-privacidade', element: <PrivacyPage /> },
       // Legado
       { path: 'cursos', element: <Navigate to="/pacotes-de-viagem" replace /> },
       { path: 'curso/:slug', element: <LegacyProductRedirect /> },

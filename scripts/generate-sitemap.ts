@@ -146,6 +146,8 @@ async function main() {
     { loc: '/aluguel-de-veiculos', lastmod: lastModified(), priority: 0.8 },
     { loc: '/sobre', lastmod: lastModified(), priority: 0.5 },
     { loc: '/contato', lastmod: lastModified(), priority: 0.5 },
+    { loc: '/termos-de-uso', lastmod: lastModified(), priority: 0.5 },
+    { loc: '/politica-de-privacidade', lastmod: lastModified(), priority: 0.5 },
   ];
 
   if (!apiUrl) {

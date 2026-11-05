@@ -142,7 +142,6 @@ export function TravelPackagesPage() {
             <>
               <ProductGrid
                 products={packages.data.items}
-                className="lg:grid-cols-3 2xl:grid-cols-4"
               />
               {meta ? (
                 <Pagination
@@ -195,11 +194,11 @@ export function TravelPackagesPage() {
               onRetry={() => posts.refetch()}
             />
           ) : posts.data?.items.length ? (
-            <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
+            <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
               {posts.data.items.map((post, index) => (
                 <div
                   key={post.id}
-                  className={`w-[280px] min-w-[280px] shrink-0 snap-start md:w-auto md:min-w-0 ${
+                  className={`w-[220px] min-w-[220px] shrink-0 snap-start md:w-auto md:min-w-0 ${
                     index === 0 ? 'md:col-span-2 lg:col-span-2' : ''
                   }`}
                 >

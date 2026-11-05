@@ -36,7 +36,7 @@ export function Footer() {
             {/* Categorias de parceiros */}
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold text-slate-600">
-                Operadoras de viagem
+                Encontre Pacotes de Viagens
               </span>
               <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold text-slate-600">
                 Aluguel de Carros
@@ -131,8 +131,8 @@ export function Footer() {
         </div>
 
         <p className="mt-8 text-xs leading-relaxed text-slate-500">
-          O Meu Destino é um guia de recomendações. Nós não vendemos produtos.
-          As transações são realizadas diretamente nos sites dos nossos parceiros.
+          O Meu Destino é um guia de viagens independente. Não vendemos produtos
+          diretamente.
         </p>
 
         {/* Disclaimer de afiliados */}
@@ -145,12 +145,12 @@ export function Footer() {
         <div className="mt-5 flex flex-col gap-3 border-t border-slate-200 pt-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>Conteúdo desenvolvido pela equipe Meu Destino.</span>
           <div className="flex items-center gap-4">
-            <a href="#" className="transition-colors hover:text-[var(--color-primary)]">
+            <Link to="/politica-de-privacidade" className="transition-colors hover:text-[var(--color-primary)]">
               Política de Privacidade
-            </a>
-            <a href="#" className="transition-colors hover:text-[var(--color-primary)]">
+            </Link>
+            <Link to="/termos-de-uso" className="transition-colors hover:text-[var(--color-primary)]">
               Termos de Uso
-            </a>
+            </Link>
           </div>
         </div>
       </Container>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { ExternalLink, ImageOff, Tag } from 'lucide-react';
+import { ExternalLink, ImageOff, MapPin, Tag } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { ErrorState } from '../components/common/ErrorState';
 import { ProductGrid } from '../components/products/ProductGrid';
@@ -242,6 +242,22 @@ export function ProductDetailPage() {
                   </span>
                 ) : null}
               </p>
+              <span
+                className={`mt-3 inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ${
+                  data.location?.nome
+                    ? 'bg-teal-50 text-teal-800 ring-1 ring-teal-100'
+                    : 'bg-slate-100 text-slate-700'
+                }`}
+              >
+                {data.location?.nome ? (
+                  <>
+                    <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+                    {data.location.nome}
+                  </>
+                ) : (
+                  'Produto Digital / Acesso Imediato'
+                )}
+              </span>
               <button
                 type="button"
                 onClick={openOffer}
@@ -306,7 +322,7 @@ export function ProductDetailPage() {
             >
               Você também pode gostar
             </h2>
-            <ProductGrid products={relatedProducts} className="lg:grid-cols-3 2xl:grid-cols-4" />
+            <ProductGrid products={relatedProducts} />
           </section>
         ) : null}
       </Container>

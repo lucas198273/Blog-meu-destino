@@ -121,7 +121,7 @@ export function DestinationFilters({
   // Opções do filtro de parceiros — exclusivamente do retorno da API
   // pública (GET /api/partners). Sem listas fixas/fallback.
   const partnersQuery = usePartners();
-  const locationsQuery = useLocations();
+  const locationsQuery = useLocations(type !== 'gear');
   const locationOptions = (locationsQuery.data ?? []).map((locationItem) => ({
     value: locationItem.slug,
     label: locationItem.nome,
@@ -286,26 +286,28 @@ export function DestinationFilters({
         </div>
       ) : null}
 
-      <div className="mt-5 max-w-sm">
-        <SelectFilter
-          id="product-location"
-          label="Localização (destino)"
-          value={location}
-          options={locationOptions}
-          loading={locationsQuery.isLoading}
-          emptyOptionLabel="Todos os destinos"
-          onChange={(value) => onLocationChange?.(value)}
-        />
-        {locationsQuery.isError ? (
-          <button
-            type="button"
-            onClick={() => locationsQuery.refetch()}
-            className="mt-2 text-left text-xs text-red-700 underline"
-          >
-            Não foi possível carregar os destinos. Tentar novamente
-          </button>
-        ) : null}
-      </div>
+      {type !== 'gear' ? (
+        <div className="mt-5 max-w-sm">
+          <SelectFilter
+            id="product-location"
+            label="Localização (destino)"
+            value={location}
+            options={locationOptions}
+            loading={locationsQuery.isLoading}
+            emptyOptionLabel="Todos os destinos"
+            onChange={(value) => onLocationChange?.(value)}
+          />
+          {locationsQuery.isError ? (
+            <button
+              type="button"
+              onClick={() => locationsQuery.refetch()}
+              className="mt-2 text-left text-xs text-red-700 underline"
+            >
+              Não foi possível carregar os destinos. Tentar novamente
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </aside>
   );
 }

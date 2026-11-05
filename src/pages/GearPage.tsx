@@ -155,7 +155,6 @@ export function GearPage() {
           <>
             <ProductGrid
               products={products.data.items}
-              className="lg:grid-cols-4"
             />
             {meta ? (
               <Pagination

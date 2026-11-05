@@ -148,7 +148,6 @@ export function VehiclesPage() {
           <>
             <ProductGrid
               products={products.data.items}
-              className="lg:grid-cols-3 2xl:grid-cols-4"
             />
             {meta ? (
               <Pagination

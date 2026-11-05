@@ -43,7 +43,7 @@ const nicheContent: Record<
 export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const categories = useNicheProductCategories(niche);
-  const locations = useLocations();
+  const locations = useLocations(niche !== 'equipamentos');
   const rawCategory = searchParams.get('category');
   const selectedCategory = categories.data?.find(
     (item) => item.id === rawCategory || item.slug === rawCategory,
@@ -68,7 +68,8 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
     () => ({
       niche,
       partner: partner || undefined,
-      location_slug: location || undefined,
+      location_slug:
+        niche === 'equipamentos' ? undefined : location || undefined,
       page,
       limit: PAGE_SIZE,
     }),
@@ -170,35 +171,37 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
           </select>
         </label>
 
-        <label className="mb-7 flex max-w-sm flex-col gap-2 text-sm font-medium text-slate-700">
-          Localização (destino)
-          <select
-            value={location}
-            onChange={(event) =>
-              applyFilters({ location_slug: event.currentTarget.value || null })
-            }
-            disabled={locations.isLoading}
-            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
-          >
-            <option value="">
-              {locations.isLoading ? 'Carregando destinos…' : 'Todos os destinos'}
-            </option>
-            {(locations.data ?? []).map((item) => (
-              <option key={item.id} value={item.slug}>
-                {item.nome}
-              </option>
-            ))}
-          </select>
-          {locations.isError ? (
-            <button
-              type="button"
-              onClick={() => locations.refetch()}
-              className="text-left text-xs text-red-700 underline"
+        {niche !== 'equipamentos' ? (
+          <label className="mb-7 flex max-w-sm flex-col gap-2 text-sm font-medium text-slate-700">
+            Localização (destino)
+            <select
+              value={location}
+              onChange={(event) =>
+                applyFilters({ location_slug: event.currentTarget.value || null })
+              }
+              disabled={locations.isLoading}
+              className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
             >
-              Não foi possível carregar os destinos. Tentar novamente
-            </button>
-          ) : null}
-        </label>
+              <option value="">
+                {locations.isLoading ? 'Carregando destinos…' : 'Todos os destinos'}
+              </option>
+              {(locations.data ?? []).map((item) => (
+                <option key={item.id} value={item.slug}>
+                  {item.nome}
+                </option>
+              ))}
+            </select>
+            {locations.isError ? (
+              <button
+                type="button"
+                onClick={() => locations.refetch()}
+                className="text-left text-xs text-red-700 underline"
+              >
+                Não foi possível carregar os destinos. Tentar novamente
+              </button>
+            ) : null}
+          </label>
+        ) : null}
 
         <p className="mb-5 text-sm text-slate-500" aria-live="polite">
           {meta
@@ -215,7 +218,7 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
           />
         ) : products.data?.items.length ? (
           <>
-            <ProductGrid products={products.data.items} className="lg:grid-cols-3 2xl:grid-cols-4" />
+            <ProductGrid products={products.data.items} />
             {meta ? (
               <Pagination
                 className="mt-10"

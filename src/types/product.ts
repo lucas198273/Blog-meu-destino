@@ -35,6 +35,7 @@ export interface Product {
   id: string;
   category_id: string | null;
   location_id?: string | null;
+  location?: { nome: string } | null;
   sku: string | null;
   nome: string;
   slug: string;

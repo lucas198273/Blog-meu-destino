@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, MapPin } from 'lucide-react';
 import { formatPrice } from '../../lib/format';
 import type { Product } from '../../types/product';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
-import { LocationBadge } from '../common/LocationBadge';
 
 // Camada de apresentação: card de oferta (veículo, pacote, equipamento etc.)
 // consumindo `Product` do backend, com CTA de afiliado externo.
@@ -36,7 +35,7 @@ export function ProductCard({ product }: { product: Product }) {
           src={partner.logo_url}
           alt={`Logo ${partner.nome}`}
           loading="lazy"
-          className="absolute top-3 right-3 z-10 h-17 w-auto max-w-[176px] rounded-lg bg-white/90 p-2 object-contain shadow-sm"
+          className="absolute right-2 top-2 z-10 h-12 w-auto max-w-[120px] rounded-lg bg-white/90 p-1.5 object-contain shadow-sm"
         />
       ) : null}
 
@@ -64,10 +63,10 @@ export function ProductCard({ product }: { product: Product }) {
       )}
 
       {/* Conteúdo */}
-      <div className="flex flex-1 flex-col gap-2.5 p-5">
+      <div className="flex flex-1 flex-col gap-2 p-3 md:p-4">
         <Link
           to={`/produto/${product.slug}`}
-          className="text-[16px] font-semibold leading-snug text-[var(--color-text)] hover:text-[var(--color-primary)]"
+          className="line-clamp-2 text-sm font-semibold leading-snug text-[var(--color-text)] hover:text-[var(--color-primary)]"
         >
           {product.nome}
         </Link>
@@ -94,20 +93,21 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
         ) : null}
 
-        {product.location_id ? (
-          <div>
-            <LocationBadge locationId={product.location_id} />
-          </div>
+        {product.location?.nome ? (
+          <Badge className="gap-1.5 bg-teal-50 text-teal-800 ring-1 ring-teal-100">
+            <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            {product.location.nome}
+          </Badge>
         ) : null}
 
-        <div className="mt-auto flex items-center justify-between gap-3 pt-1">
+        <div className="mt-auto flex flex-col items-stretch gap-2 pt-1">
           {product.preco !== null ? (
-            <span className="text-base font-semibold text-[var(--color-primary)]">
+            <span className="text-sm font-semibold text-[var(--color-primary)]">
               {formatPrice(product.preco)}
               {product.price_unit ? ` / ${product.price_unit}` : ''}
             </span>
           ) : (
-            <span className="text-sm font-medium text-slate-400">
+            <span className="text-xs font-medium text-slate-400">
               Consulte
             </span>
           )}
@@ -117,15 +117,15 @@ export function ProductCard({ product }: { product: Product }) {
               href={product.affiliate_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
+              className="inline-flex h-9 items-center justify-center gap-1 rounded-lg bg-[var(--color-accent)] px-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
             >
-              Ver Oferta no Parceiro
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              Ver oferta
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           ) : (
             <Link
               to={`/produto/${product.slug}`}
-              className="inline-flex h-9 items-center rounded-lg bg-[var(--color-accent)] px-4 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
+              className="inline-flex h-9 items-center justify-center rounded-lg bg-[var(--color-accent)] px-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
             >
               Ver detalhes
             </Link>
