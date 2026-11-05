@@ -139,6 +139,8 @@ export function ProductPage() {
               <img
                 src={cover.url}
                 alt={cover.alt?.trim() || `Imagem de ${data.nome}`}
+                fetchPriority="high"
+                decoding="async"
                 className="aspect-[4/3] w-full rounded-xl object-cover"
               />
             ) : (
@@ -166,6 +168,7 @@ export function ProductPage() {
                       src={partner.logo_url}
                       alt={`Logotipo de ${partner.nome}`}
                       loading="lazy"
+                      decoding="async"
                       className="h-7 max-w-[110px] object-contain"
                     />
                   ) : null}
@@ -287,6 +290,7 @@ export function ProductPage() {
                   src={data.coordinator_photo_url}
                   alt={`Foto de ${data.coordinator_name}`}
                   loading="lazy"
+                  decoding="async"
                   className="h-20 w-20 shrink-0 rounded-full object-cover"
                 />
               ) : (

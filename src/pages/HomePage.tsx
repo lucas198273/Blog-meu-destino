@@ -103,7 +103,7 @@ export function HomePage() {
           src={HERO_BANNER_SRC}
           alt=""
           aria-hidden="true"
-          {...({ fetchpriority: 'high' } as Record<string, string>)}
+          fetchPriority="high"
           decoding="async"
           className="absolute inset-0 -z-10 h-full w-full object-cover object-center"
         />
@@ -139,9 +139,9 @@ export function HomePage() {
         </Container>
       </section>
 
-      <Container className="py-16">
+      <Container className="space-y-10 py-10 sm:space-y-14 sm:py-16">
         <section>
-          <h2 className="mb-8 text-2xl font-bold text-[var(--color-primary)]">
+          <h2 className="mb-5 text-xl font-bold text-[var(--color-primary)] sm:mb-8 sm:text-2xl">
             Ofertas em destaque
           </h2>
           {productsLoading ? (
@@ -153,14 +153,14 @@ export function HomePage() {
             />
           ) : null}
           {!productsLoading && featuredProducts.length > 0 ? (
-            <ProductGrid products={featuredProducts} />
+            <ProductGrid products={featuredProducts} layout="carousel" />
           ) : !productsLoading && failedNiches.length === 0 ? (
             <EmptyState title="Nenhuma oferta em destaque ainda" />
           ) : null}
         </section>
 
         <section>
-          <h2 className="mb-8 text-2xl font-bold text-slate-900">
+          <h2 className="mb-5 text-xl font-bold text-slate-900 sm:mb-8 sm:text-2xl">
             Posts em destaque
           </h2>
           {featuredPosts.isLoading ? (
@@ -171,14 +171,14 @@ export function HomePage() {
               onRetry={() => featuredPosts.refetch()}
             />
           ) : featuredPosts.data && featuredPosts.data.items.length > 0 ? (
-            <PostList posts={featuredPosts.data.items} />
+            <PostList posts={featuredPosts.data.items} layout="carousel" />
           ) : (
             <EmptyState title="Nenhum post em destaque ainda" />
           )}
         </section>
 
-        <section className="mt-16">
-          <h2 className="mb-8 text-2xl font-bold text-slate-900">
+        <section>
+          <h2 className="mb-5 text-xl font-bold text-slate-900 sm:mb-8 sm:text-2xl">
             Últimos Posts
           </h2>
           <div className="mb-8">
@@ -197,7 +197,7 @@ export function HomePage() {
               onRetry={() => treeFilteredPosts.refetch()}
             />
           ) : treeFilteredPosts.data?.items.length ? (
-            <PostList posts={treeFilteredPosts.data.items} />
+            <PostList posts={treeFilteredPosts.data.items} layout="carousel" />
           ) : (
             <EmptyState
               title="Nenhum post encontrado"
@@ -210,12 +210,13 @@ export function HomePage() {
 
       {/* Seção institucional — contraste de marca com CTA para /sobre */}
       <section className="bg-gradient-to-br from-[#073b3e] via-[#0d5556] to-[#18736c] text-white">
-        <Container className="py-16 sm:py-20">
+        <Container className="py-12 sm:py-20">
           <div className="mx-auto max-w-2xl text-center">
             <img
               src="/assets/logo.webp"
               alt="Meu Destino"
               loading="lazy"
+              decoding="async"
               className="mx-auto h-24 w-auto rounded-2xl bg-white p-3 shadow-lg"
             />
             <p className="mt-8 text-base leading-relaxed text-white/90 sm:text-lg">

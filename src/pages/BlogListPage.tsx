@@ -87,9 +87,9 @@ export function BlogListPage() {
         <meta name="description" content="Todos os posts do blog: roteiros, destinos e dicas." />
         <link rel="canonical" href={canonicalUrl(canonicalPath)} />
       </Helmet>
-      <Container className="py-12">
+      <Container className="py-8 sm:py-12">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
             {name ? `Tipo: ${name}` : 'Blog'}
           </h1>
           <Link

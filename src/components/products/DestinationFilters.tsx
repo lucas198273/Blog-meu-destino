@@ -1,8 +1,9 @@
+import { useId } from 'react';
 import { useLocation } from 'react-router-dom';
 import { cn } from '../../lib/cn';
 import { usePartners } from '../../hooks/usePartners';
+import { MobileFilterDrawer } from '../common/MobileFilterDrawer';
 import type { ProductCategory } from '../../types/product';
-import { CategoryPills } from '../blog/CategoryPills';
 import { FilterPillGroup } from './FilterPillGroup';
 import { useLocations } from '../../hooks/useLocations';
 
@@ -64,16 +65,19 @@ function SelectFilter({
   emptyOptionLabel?: string;
   onChange: (value: string) => void;
 }) {
+  const generatedId = useId();
+  const controlId = `${id}-${generatedId}`;
+
   return (
     <div>
       <label
-        htmlFor={id}
+        htmlFor={controlId}
         className="mb-2 block text-sm font-semibold text-slate-800"
       >
         {label}
       </label>
       <select
-        id={id}
+        id={controlId}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
@@ -115,6 +119,7 @@ export function DestinationFilters({
   onClear,
   className,
 }: DestinationFiltersProps) {
+  const generatedId = useId();
   const { pathname } = useLocation();
   const type = pageType ?? getPageType(pathname);
 
@@ -139,8 +144,8 @@ export function DestinationFilters({
     }),
   );
 
-  return (
-    <aside
+  const filters = (
+    <div
       aria-label="Filtros de produtos"
       className={cn(
         'rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5',
@@ -166,7 +171,7 @@ export function DestinationFilters({
       </div>
 
       {type === 'vehicle' ? (
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-5">
           <SelectFilter
             id="vehicle-partner"
             label="Parceiro"
@@ -198,7 +203,7 @@ export function DestinationFilters({
       ) : null}
 
       {type === 'gear' ? (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5">
           <SelectFilter
             id="gear-partner"
             label="Parceiro"
@@ -223,11 +228,11 @@ export function DestinationFilters({
               Faixa de preço
             </legend>
             <div className="grid grid-cols-2 gap-3">
-              <label className="sr-only" htmlFor="gear-min-price">
+              <label className="sr-only" htmlFor={`gear-min-price-${generatedId}`}>
                 Preço mínimo
               </label>
               <input
-                id="gear-min-price"
+                id={`gear-min-price-${generatedId}`}
                 type="number"
                 min="0"
                 step="1"
@@ -239,11 +244,11 @@ export function DestinationFilters({
                 }
                 className="min-w-0 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
               />
-              <label className="sr-only" htmlFor="gear-max-price">
+              <label className="sr-only" htmlFor={`gear-max-price-${generatedId}`}>
                 Preço máximo
               </label>
               <input
-                id="gear-max-price"
+                id={`gear-max-price-${generatedId}`}
                 type="number"
                 min="0"
                 step="1"
@@ -261,7 +266,7 @@ export function DestinationFilters({
       ) : null}
 
       {type === 'destination' ? (
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-5">
           <SelectFilter
             id="destination-partner"
             label="Parceiro"
@@ -270,19 +275,18 @@ export function DestinationFilters({
             loading={partnersQuery.isLoading}
             onChange={(value) => onPartnerChange?.(value)}
           />
-          <div>
-            <h3 className="mb-3 text-sm font-semibold text-slate-800">
-              Explore por região
-            </h3>
-            <CategoryPills
-              categories={categories}
-              activeSlug={category}
-              onSelect={(value) => onCategoryChange?.(value)}
-              loading={categoriesLoading}
-              ariaLabel="Filtrar pacotes por categoria"
-              allLabel="Todas as regiões"
-            />
-          </div>
+          <SelectFilter
+            id="destination-category"
+            label="Categoria"
+            value={category ?? ''}
+            options={categories.map((item) => ({
+              value: item.slug,
+              label: item.nome,
+            }))}
+            loading={categoriesLoading}
+            emptyOptionLabel="Todas as categorias"
+            onChange={(value) => onCategoryChange?.(value || null)}
+          />
         </div>
       ) : null}
 
@@ -308,6 +312,15 @@ export function DestinationFilters({
           ) : null}
         </div>
       ) : null}
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      <MobileFilterDrawer title="Filtros de produtos">{filters}</MobileFilterDrawer>
+      <aside className="hidden lg:sticky lg:top-24 lg:block">
+        {filters}
+      </aside>
+    </>
   );
 }

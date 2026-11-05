@@ -108,6 +108,7 @@ export function GearPage() {
       </section>
 
       <Container className="py-8 sm:py-10">
+        <div className="grid items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
         <DestinationFilters
           pageType="gear"
           partner={partner}
@@ -130,9 +131,10 @@ export function GearPage() {
             updateParams({ max_price: value || null })
           }
           onClear={clearFilters}
-          className="mb-8"
+          className="lg:mb-0"
         />
 
+        <section className="min-w-0">
         <div className="mb-5">
           <h2 className="text-xl font-bold text-slate-900">
             Itens para viajar melhor
@@ -176,6 +178,8 @@ export function GearPage() {
             description="Ajuste os filtros de parceiro ou faixa de preço."
           />
         )}
+        </section>
+        </div>
       </Container>
     </>
   );

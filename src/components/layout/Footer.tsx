@@ -13,7 +13,7 @@ export function Footer() {
   return (
     <footer className="mt-16 border-t border-slate-200 bg-slate-50 text-[var(--color-text)]">
       <Container className="py-10 sm:py-12">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1.4fr]">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1.4fr] md:gap-10">
           {/* Identidade */}
           <div>
             <Link
@@ -25,7 +25,8 @@ export function Footer() {
                 src="/assets/logo.webp"
                 alt="Meu Destino"
                 loading="lazy"
-                className="h-[76.8px] w-auto rounded-lg bg-white p-1"
+                decoding="async"
+                className="h-16 w-auto rounded-lg bg-white p-1 sm:h-[76.8px]"
               />
             </Link>
 

@@ -15,19 +15,20 @@ export function PostCard({ post }: { post: BlogPost }) {
             src={post.cover_image_url}
             alt={post.title}
             loading="lazy"
-            className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            decoding="async"
+            className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         </Link>
       ) : (
-        <div className="aspect-[16/10] w-full bg-[#F5F7F5]" />
+        <div className="aspect-video w-full bg-[#F5F7F5]" />
       )}
 
       {/* Conteúdo */}
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex flex-1 flex-col gap-3 p-3 sm:p-5">
         {/* Título */}
         <Link
           to={`/blog/${post.slug}`}
-          className="text-[17px] font-semibold leading-snug text-[#222222] transition-colors group-hover:text-[var(--color-primary)]"
+          className="line-clamp-3 text-base font-semibold leading-snug text-[#222222] transition-colors group-hover:text-[var(--color-primary)] sm:text-[17px]"
         >
           {post.title}
         </Link>

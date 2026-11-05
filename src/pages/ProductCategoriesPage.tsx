@@ -44,6 +44,7 @@ function ProductCategoryCard({
             src={category.cover_image_url}
             alt={`Categoria ${category.nome}`}
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
@@ -57,7 +58,7 @@ function ProductCategoryCard({
           </span>
         ) : null}
       </div>
-      <div className="flex items-center justify-between gap-4 p-5">
+      <div className="flex items-center justify-between gap-4 p-3 sm:p-5">
         <div>
           <h2 className="font-bold text-slate-900 group-hover:text-[var(--color-primary)]">
             {category.nome}

@@ -16,7 +16,7 @@ export function NicheTabs({
   return (
     <nav
       aria-label="Categorias de produtos"
-      className="mb-7 flex gap-2 overflow-x-auto border-b border-slate-200"
+      className="mb-7 flex gap-2 overflow-x-auto border-b border-slate-200 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
     >
       {niches.map((niche) => (
         <NavLink

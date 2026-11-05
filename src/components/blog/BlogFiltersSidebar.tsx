@@ -1,3 +1,4 @@
+import { MobileFilterDrawer } from '../common/MobileFilterDrawer';
 import { cn } from '../../lib/cn';
 import type { BlogCategory } from '../../types/blog';
 import type { Location } from '../../types/location';
@@ -75,8 +76,8 @@ export function BlogFiltersSidebar({
     );
   }
 
-  return (
-    <aside className="space-y-5" aria-label="Filtros do blog">
+  const filters = (
+    <div className="space-y-5" aria-label="Filtros do blog">
       <section className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
         <h2 className="text-base font-bold text-slate-900">Explore por Tipo</h2>
         <p className="mt-1 text-xs text-slate-500">Escolha a categoria do conteúdo.</p>
@@ -161,6 +162,15 @@ export function BlogFiltersSidebar({
           )}
         </div>
       </section>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      <MobileFilterDrawer title="Filtros do blog">{filters}</MobileFilterDrawer>
+      <aside className="hidden space-y-5 lg:sticky lg:top-24 lg:block">
+        {filters}
+      </aside>
+    </>
   );
 }

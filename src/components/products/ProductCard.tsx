@@ -35,7 +35,8 @@ export function ProductCard({ product }: { product: Product }) {
           src={partner.logo_url}
           alt={`Logo ${partner.nome}`}
           loading="lazy"
-          className="absolute right-2 top-2 z-10 h-12 w-auto max-w-[120px] rounded-lg bg-white/90 p-1.5 object-contain shadow-sm"
+          decoding="async"
+          className="absolute right-2 top-2 z-10 h-9 w-auto max-w-[88px] rounded-lg bg-white/90 p-1 object-contain shadow-sm sm:h-12 sm:max-w-[120px] sm:p-1.5"
         />
       ) : null}
 
@@ -53,7 +54,8 @@ export function ProductCard({ product }: { product: Product }) {
               `Imagem de ${product.nome}${partner ? ` - oferta de ${partner.nome}` : ''}`
             }
             loading="lazy"
-            className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            decoding="async"
+            className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         </Link>
       ) : (
@@ -63,7 +65,7 @@ export function ProductCard({ product }: { product: Product }) {
       )}
 
       {/* Conteúdo */}
-      <div className="flex flex-1 flex-col gap-2 p-3 md:p-4">
+      <div className="flex flex-1 flex-col gap-2 p-2 sm:p-3 md:p-4">
         <Link
           to={`/produto/${product.slug}`}
           className="line-clamp-2 text-sm font-semibold leading-snug text-[var(--color-text)] hover:text-[var(--color-primary)]"

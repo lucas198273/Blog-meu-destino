@@ -144,7 +144,7 @@ export function ProductDetailPage() {
           ← Voltar para ofertas
         </Link>
 
-        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(320px,0.7fr)] lg:gap-12">
+        <div className="mt-6 grid min-w-0 gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(280px,0.7fr)] md:gap-8 lg:gap-12">
           <section aria-label="Galeria de imagens" className="min-w-0">
             <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-slate-100">
               {activeImage?.url ? (
@@ -152,6 +152,7 @@ export function ProductDetailPage() {
                   src={activeImage.url}
                   alt={activeImage.alt?.trim() || `Imagem de ${data.nome}`}
                   fetchPriority="high"
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -181,6 +182,7 @@ export function ProductDetailPage() {
                       src={image.url}
                       alt={image.alt ?? `${data.nome} - imagem ${index + 1}`}
                       loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover"
                     />
                   </button>
@@ -201,6 +203,7 @@ export function ProductDetailPage() {
                     src={partner.logo_url}
                     alt={`Logotipo de ${partner.nome}`}
                     loading="lazy"
+                    decoding="async"
                     className="h-11 w-16 rounded-md object-contain"
                   />
                 ) : (

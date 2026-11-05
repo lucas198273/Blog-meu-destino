@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
+import { MobileFilterDrawer } from '../components/common/MobileFilterDrawer';
 import { Pagination } from '../components/common/Pagination';
 import { NicheTabs } from '../components/products/NicheTabs';
 import { ProductGrid } from '../components/products/ProductGrid';
@@ -104,6 +105,61 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
     trackEvent('filter_products', { niche, category: category ?? '', page: nextPage });
   }
 
+  const filterControls = (
+    <div className="space-y-5">
+      <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+        Categoria
+        <select
+          value={category ?? ''}
+          onChange={(event) =>
+            applyFilters({ category: event.currentTarget.value || null })
+          }
+          disabled={categories.isLoading}
+          className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
+        >
+          <option value="">Todas as categorias</option>
+          {(categories.data ?? []).map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.nome}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {niche !== 'equipamentos' ? (
+        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          Localização (destino)
+          <select
+            value={location}
+            onChange={(event) =>
+              applyFilters({ location_slug: event.currentTarget.value || null })
+            }
+            disabled={locations.isLoading}
+            className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
+          >
+            <option value="">
+              {locations.isLoading ? 'Carregando destinos…' : 'Todos os destinos'}
+            </option>
+            {(locations.data ?? []).map((item) => (
+              <option key={item.id} value={item.slug}>
+                {item.nome}
+              </option>
+            ))}
+          </select>
+          {locations.isError ? (
+            <button
+              type="button"
+              onClick={() => locations.refetch()}
+              className="text-left text-xs text-red-700 underline"
+            >
+              Não foi possível carregar os destinos. Tentar novamente
+            </button>
+          ) : null}
+        </label>
+      ) : null}
+    </div>
+  );
+
   return (
     <>
       <Helmet>
@@ -152,57 +208,19 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
           }
         />
 
-        <label className="mb-7 flex max-w-sm flex-col gap-2 text-sm font-medium text-slate-700">
-          Categoria
-          <select
-            value={category ?? ''}
-            onChange={(event) =>
-              applyFilters({ category: event.currentTarget.value || null })
-            }
-            disabled={categories.isLoading}
-            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
-          >
-            <option value="">Todas as categorias</option>
-            {(categories.data ?? []).map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.nome}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        {niche !== 'equipamentos' ? (
-          <label className="mb-7 flex max-w-sm flex-col gap-2 text-sm font-medium text-slate-700">
-            Localização (destino)
-            <select
-              value={location}
-              onChange={(event) =>
-                applyFilters({ location_slug: event.currentTarget.value || null })
-              }
-              disabled={locations.isLoading}
-              className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15"
-            >
-              <option value="">
-                {locations.isLoading ? 'Carregando destinos…' : 'Todos os destinos'}
-              </option>
-              {(locations.data ?? []).map((item) => (
-                <option key={item.id} value={item.slug}>
-                  {item.nome}
-                </option>
-              ))}
-            </select>
-            {locations.isError ? (
-              <button
-                type="button"
-                onClick={() => locations.refetch()}
-                className="text-left text-xs text-red-700 underline"
-              >
-                Não foi possível carregar os destinos. Tentar novamente
-              </button>
-            ) : null}
-          </label>
-        ) : null}
-
+        <MobileFilterDrawer title="Filtros de produtos">
+          {filterControls}
+        </MobileFilterDrawer>
+        <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
+          <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
+            <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+              <p className="mb-4 text-sm font-bold text-slate-900">
+                Refinar busca
+              </p>
+              {filterControls}
+            </div>
+          </aside>
+          <section className="min-w-0">
         <p className="mb-5 text-sm text-slate-500" aria-live="polite">
           {meta
             ? `${meta.total} ${meta.total === 1 ? 'produto disponível' : 'produtos disponíveis'}`
@@ -234,6 +252,8 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
             description="Experimente outra categoria ou volte em breve para conferir novas ofertas."
           />
         )}
+          </section>
+        </div>
       </Container>
     </>
   );

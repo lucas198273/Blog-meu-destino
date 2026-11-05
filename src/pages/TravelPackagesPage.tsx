@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { Pagination } from '../components/common/Pagination';
-import { PostCard } from '../components/blog/PostCard';
+import { PostList } from '../components/blog/PostList';
 import { DestinationFilters } from '../components/products/DestinationFilters';
 import { NicheTabs } from '../components/products/NicheTabs';
 import { ProductGrid } from '../components/products/ProductGrid';
@@ -106,6 +106,7 @@ export function TravelPackagesPage() {
             </h2>
           </div>
 
+          <div className="grid items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
           <DestinationFilters
             pageType="destination"
             partner={partner}
@@ -122,9 +123,10 @@ export function TravelPackagesPage() {
             onClear={() =>
               setSearchParams({}, { replace: true, preventScrollReset: true })
             }
-            className="mb-7"
+            className="lg:mb-0"
           />
 
+          <div className="min-w-0">
           <p className="mb-5 text-sm text-slate-500" aria-live="polite">
             {meta
               ? `${meta.total} ${meta.total === 1 ? 'pacote disponível' : 'pacotes disponíveis'}`
@@ -163,6 +165,8 @@ export function TravelPackagesPage() {
               description="Confira outra região ou volte em breve para novas ofertas."
             />
           )}
+          </div>
+          </div>
         </section>
 
         <section aria-labelledby="guides-heading" className="mt-14 sm:mt-20">
@@ -194,18 +198,7 @@ export function TravelPackagesPage() {
               onRetry={() => posts.refetch()}
             />
           ) : posts.data?.items.length ? (
-            <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
-              {posts.data.items.map((post, index) => (
-                <div
-                  key={post.id}
-                  className={`w-[220px] min-w-[220px] shrink-0 snap-start md:w-auto md:min-w-0 ${
-                    index === 0 ? 'md:col-span-2 lg:col-span-2' : ''
-                  }`}
-                >
-                  <PostCard post={post} />
-                </div>
-              ))}
-            </div>
+            <PostList posts={posts.data.items} layout="carousel" />
           ) : (
             <EmptyState
               title="Novos guias em breve"

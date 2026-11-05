@@ -103,6 +103,7 @@ export function VehiclesPage() {
       </section>
 
       <Container className="py-8 sm:py-10">
+        <div className="grid items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
         <DestinationFilters
           pageType="vehicle"
           partner={partner}
@@ -121,9 +122,10 @@ export function VehiclesPage() {
             updateParams({ vehicle_type: value || null })
           }
           onClear={clearFilters}
-          className="mb-8"
+          className="lg:mb-0"
         />
 
+        <section className="min-w-0">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold text-slate-900">
@@ -169,6 +171,8 @@ export function VehiclesPage() {
             description="Experimente outro parceiro ou tipo de veículo."
           />
         )}
+        </section>
+        </div>
       </Container>
     </>
   );

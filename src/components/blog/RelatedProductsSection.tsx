@@ -2,6 +2,7 @@ import { usePostProducts } from '../../hooks/usePosts';
 import { ExternalLink } from 'lucide-react';
 import type { Product } from '../../types/product';
 import { formatPrice } from '../../lib/format';
+import { HorizontalCarousel } from '../common/HorizontalCarousel';
 
 interface RelatedProductsSectionProps {
   postId: string;
@@ -49,16 +50,16 @@ export function RelatedProductsSection({
       >
         {title}
       </h2>
-      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-5 xl:grid-cols-6">
+      <HorizontalCarousel ariaLabel="Ofertas relacionadas">
         {products.data.map((product) => (
           <div
             key={product.id}
-            className="w-[180px] min-w-[180px] shrink-0 snap-start md:w-auto md:min-w-0"
+            className="w-[min(85vw,300px)] shrink-0 snap-start"
           >
             <RelatedProductCard product={product} />
           </div>
         ))}
-      </div>
+      </HorizontalCarousel>
     </section>
   );
 }
@@ -73,7 +74,8 @@ function RelatedProductCard({ product }: { product: Product }) {
           src={cover.url}
           alt={cover.alt?.trim() || `Imagem de ${product.nome}`}
           loading="lazy"
-          className="aspect-[4/3] w-full object-cover"
+          decoding="async"
+          className="aspect-square w-full object-cover"
         />
       ) : null}
       <div className="flex flex-1 flex-col gap-2 p-3 md:p-4">
@@ -105,11 +107,11 @@ function RelatedProductCard({ product }: { product: Product }) {
 
 function ProductGridSkeleton() {
   return (
-    <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-5 xl:grid-cols-6">
+    <HorizontalCarousel ariaLabel="Carregando ofertas relacionadas">
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
-          className="w-[180px] min-w-[180px] shrink-0 snap-start md:w-auto md:min-w-0"
+          className="w-[min(85vw,300px)] shrink-0 snap-start"
         >
           <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
             <div className="aspect-square w-full animate-pulse bg-slate-100" />
@@ -121,6 +123,6 @@ function ProductGridSkeleton() {
           </div>
         </div>
       ))}
-    </div>
+    </HorizontalCarousel>
   );
 }

@@ -38,7 +38,7 @@ export function CategoryPills({
     <div
       role="group"
       aria-label={ariaLabel}
-      className="-mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0"
+      className="-mx-4 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0"
     >
       <div className="flex min-w-max gap-2.5">
         <Pill

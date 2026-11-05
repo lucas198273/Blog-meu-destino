@@ -53,6 +53,7 @@ export function RecentPostsList({ currentPostId }: RecentPostsListProps) {
                     src={post.cover_image_url}
                     alt={post.title}
                     loading="lazy"
+                    decoding="async"
                     className="h-16 w-16 shrink-0 rounded-lg object-cover"
                   />
                 ) : (

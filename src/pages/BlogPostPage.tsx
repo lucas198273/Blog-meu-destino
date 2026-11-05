@@ -85,7 +85,9 @@ export function BlogPostPage() {
               <img
                 src={cover}
                 alt={data.title}
-                className="aspect-[16/7] w-full rounded-xl object-cover"
+                loading="lazy"
+                decoding="async"
+                className="aspect-video w-full rounded-xl object-cover"
               />
             ) : null}
 
