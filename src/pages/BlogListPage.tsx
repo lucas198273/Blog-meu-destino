@@ -59,13 +59,29 @@ export function BlogListPage() {
     if (!Object.prototype.hasOwnProperty.call(changes, 'page')) {
       next.delete('page');
     }
-    setSearchParams(next, { replace: true, preventScrollReset: true });
-    if (slugParam && changes.category === null) {
+
+    if (slugParam && Object.prototype.hasOwnProperty.call(changes, 'category')) {
       navigate(`/blog${next.size ? `?${next.toString()}` : ''}`, {
         replace: true,
         preventScrollReset: true,
       });
+      return;
     }
+
+    setSearchParams(
+      (current) => {
+        const updated = new URLSearchParams(current);
+        for (const [key, value] of Object.entries(changes)) {
+          if (value) updated.set(key, value);
+          else updated.delete(key);
+        }
+        if (!Object.prototype.hasOwnProperty.call(changes, 'page')) {
+          updated.delete('page');
+        }
+        return updated;
+      },
+      { replace: true, preventScrollReset: true },
+    );
   }
 
   function currentName() {

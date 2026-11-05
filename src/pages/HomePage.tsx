@@ -20,6 +20,7 @@ import { canonicalUrl } from '../lib/seo';
 
 const POSTS_LIMIT = 9;
 const FEATURED_LIMIT = 3;
+const FEATURED_PRODUCTS_LIMIT = 9;
 /** Caminho do banner do hero. */
 const HERO_BANNER_SRC = '/assets/bloghero.png';
 
@@ -50,31 +51,10 @@ export function HomePage() {
   );
   const treeFilteredPosts = usePostsForCategoryTree(filteredParams, categoryIds);
   const featuredPosts = usePosts(featuredParams);
-  const vehicleFeatured = useProducts({ niche: 'veiculos', featured: true, limit: 1 });
-  const vehicleFallback = useProducts({ niche: 'veiculos', limit: 1 });
-  const gearFeatured = useProducts({ niche: 'equipamentos', featured: true, limit: 1 });
-  const gearFallback = useProducts({ niche: 'equipamentos', limit: 1 });
-  const travelFeatured = useProducts({ niche: 'viagens', featured: true, limit: 1 });
-  const travelFallback = useProducts({ niche: 'viagens', limit: 1 });
-  const offerQueries = [
-    vehicleFeatured,
-    vehicleFallback,
-    gearFeatured,
-    gearFallback,
-    travelFeatured,
-    travelFallback,
-  ];
-  const productsLoading = offerQueries.some((query) => query.isLoading);
-  const failedNiches = [
-    [vehicleFeatured, vehicleFallback],
-    [gearFeatured, gearFallback],
-    [travelFeatured, travelFallback],
-  ].filter((queries) => queries.every((query) => query.isError));
-  const featuredProducts = [
-    vehicleFeatured.data?.items[0] ?? vehicleFallback.data?.items[0],
-    gearFeatured.data?.items[0] ?? gearFallback.data?.items[0],
-    travelFeatured.data?.items[0] ?? travelFallback.data?.items[0],
-  ].filter((product) => product !== undefined);
+  const featuredProducts = useProducts({
+    featured: true,
+    limit: FEATURED_PRODUCTS_LIMIT,
+  });
 
   const handleSelect = useCallback(
     (slug: string | null) => {
@@ -144,17 +124,22 @@ export function HomePage() {
           <h2 className="mb-5 text-xl font-bold text-[var(--color-primary)] sm:mb-8 sm:text-2xl">
             Ofertas em destaque
           </h2>
-          {productsLoading ? (
+          {featuredProducts.isLoading ? (
             <PageLoader />
-          ) : failedNiches.length > 0 ? (
+          ) : featuredProducts.isError ? (
             <ErrorState
               message="Não foi possível carregar as ofertas."
-              onRetry={() => offerQueries.forEach((query) => void query.refetch())}
+              onRetry={() => void featuredProducts.refetch()}
             />
           ) : null}
-          {!productsLoading && featuredProducts.length > 0 ? (
-            <ProductGrid products={featuredProducts} layout="carousel" />
-          ) : !productsLoading && failedNiches.length === 0 ? (
+          {!featuredProducts.isLoading &&
+          !featuredProducts.isError &&
+          featuredProducts.data?.items.length ? (
+            <ProductGrid
+              products={featuredProducts.data.items}
+              layout="carousel"
+            />
+          ) : !featuredProducts.isLoading && !featuredProducts.isError ? (
             <EmptyState title="Nenhuma oferta em destaque ainda" />
           ) : null}
         </section>
