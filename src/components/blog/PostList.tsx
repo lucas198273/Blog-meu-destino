@@ -15,7 +15,7 @@ export function PostList({
       key={post.id}
       className={
         layout === 'carousel'
-          ? 'w-[min(85vw,340px)] shrink-0 snap-start'
+          ? 'w-[min(85%,340px)] shrink-0 snap-start'
           : 'min-w-0'
       }
     >

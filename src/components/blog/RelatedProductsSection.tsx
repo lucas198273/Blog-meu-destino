@@ -54,7 +54,7 @@ export function RelatedProductsSection({
         {products.data.map((product) => (
           <div
             key={product.id}
-            className="w-[min(85vw,300px)] shrink-0 snap-start"
+            className="w-[min(85%,300px)] shrink-0 snap-start"
           >
             <RelatedProductCard product={product} />
           </div>
@@ -111,7 +111,7 @@ function ProductGridSkeleton() {
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
-          className="w-[min(85vw,300px)] shrink-0 snap-start"
+          className="w-[min(85%,300px)] shrink-0 snap-start"
         >
           <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
             <div className="aspect-square w-full animate-pulse bg-slate-100" />

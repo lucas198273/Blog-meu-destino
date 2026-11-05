@@ -21,7 +21,7 @@ export function HorizontalCarousel({
   }
 
   return (
-    <div className="group/carousel relative">
+    <div className="group/carousel relative w-full min-w-0">
       <button
         type="button"
         aria-label={`Voltar em ${ariaLabel}`}
@@ -36,7 +36,7 @@ export function HorizontalCarousel({
         aria-label={ariaLabel}
         aria-roledescription="carrossel"
         className={cn(
-          'flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
+          'flex w-full min-w-0 snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
           className,
         )}
       >

@@ -17,7 +17,7 @@ export function ProductGrid({
       key={product.id}
       className={
         layout === 'carousel'
-          ? 'w-[calc((100vw-3rem)/2)] max-w-[220px] shrink-0 snap-start'
+          ? 'w-[calc((100%_-_1rem)/2)] max-w-[220px] shrink-0 snap-start'
           : 'min-w-0'
       }
     >
