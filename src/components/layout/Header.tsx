@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/cn';
 import { Container } from '../ui/Container';
@@ -109,15 +110,28 @@ export function Header() {
         </div>
       </Container>
 
-      {menuOpen ? (
-        <div className="md:hidden">
-          <nav
-            id="mobile-navigation"
-            aria-label="Navegação principal"
-            className="fixed inset-x-0 bottom-0 top-16 z-50 overflow-y-auto border-t border-slate-100 bg-white px-4 pb-6 pt-4 shadow-xl sm:px-6 md:top-[72px]"
-          >
-            <div className="mx-auto flex min-h-full max-w-7xl flex-col">
-              <div className="mb-3 flex items-center justify-between border-b border-slate-100 pb-3">
+      {menuOpen
+        ? createPortal(
+            <div
+              id="mobile-navigation"
+              className="fixed inset-0 z-[100] overflow-y-auto overscroll-contain bg-white md:hidden"
+            >
+          <div className="min-h-full px-4 pb-6 pt-[env(safe-area-inset-top)] sm:px-6">
+            <div className="mx-auto flex min-h-[calc(100dvh-env(safe-area-inset-top))] max-w-7xl flex-col">
+              <div className="flex h-16 shrink-0 items-center justify-between border-b border-slate-100">
+                <Link
+                  to="/"
+                  aria-label="Meu Destino - Página inicial"
+                  onClick={closeMenu}
+                  className="flex items-center"
+                >
+                  <img
+                    src="/assets/logo.webp"
+                    alt="Meu Destino"
+                    decoding="async"
+                    className="h-12 w-auto rounded-lg bg-white p-1"
+                  />
+                </Link>
                 <span className="text-sm font-bold text-slate-900">Menu</span>
                 <button
                   type="button"
@@ -128,35 +142,42 @@ export function Header() {
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === '/'}
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    cn(
-                      'rounded-xl px-4 py-3.5 text-base font-semibold transition-colors',
-                      isActive
-                        ? 'bg-teal-50 text-teal-900'
-                        : 'text-slate-700 hover:bg-slate-50',
-                    )
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-              <Link
-                to="/pacotes-de-viagem"
-                onClick={closeMenu}
-                className="mt-3 inline-flex h-12 items-center justify-center rounded-xl bg-[var(--color-accent)] px-4 text-sm font-bold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
+              <nav
+                aria-label="Navegação principal"
+                className="flex flex-1 flex-col pt-4"
               >
-                Planeje sua viagem
-              </Link>
+                {navItems.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.to === '/'}
+                    onClick={closeMenu}
+                    className={({ isActive }) =>
+                      cn(
+                        'rounded-xl px-4 py-4 text-base font-semibold transition-colors',
+                        isActive
+                          ? 'bg-teal-50 text-teal-900'
+                          : 'text-slate-700 hover:bg-slate-50',
+                      )
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+                <Link
+                  to="/pacotes-de-viagem"
+                  onClick={closeMenu}
+                  className="mt-auto inline-flex h-12 items-center justify-center rounded-xl bg-[var(--color-accent)] px-4 text-sm font-bold text-white transition-colors hover:bg-[var(--color-accent-dark)]"
+                >
+                  Planeje sua viagem
+                </Link>
+              </nav>
             </div>
-          </nav>
-        </div>
-      ) : null}
+          </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </header>
   );
 }
