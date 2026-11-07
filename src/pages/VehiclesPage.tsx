@@ -15,6 +15,8 @@ import {
 import type { ListProductsParams } from '../types/product';
 import { getCategoryTreeIds } from '../lib/categoryTree';
 import { canonicalUrl } from '../lib/seo';
+import { DynamicWidget } from '../components/widgets/DynamicWidget';
+import { useLocations } from '../hooks/useLocations';
 
 const PAGE_SIZE = 12;
 
@@ -53,6 +55,13 @@ export function VehiclesPage() {
       tags: vehicleType ? VEHICLE_TYPES[vehicleType] : undefined,
     }),
     [page, partner, vehicleType, location],
+  );
+  // Widget de afiliado: o filtro trabalha com slug, a rota /api/widgets/resolve
+  // espera o UUID da localizaÃ§Ã£o.
+  const locations = useLocations();
+  const selectedLocationId = useMemo(
+    () => locations.data?.find((item) => item.slug === location)?.id ?? null,
+    [locations.data, location],
   );
   const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
@@ -126,6 +135,7 @@ export function VehiclesPage() {
         />
 
         <section className="min-w-0">
+        <DynamicWidget niche="aluguel-veiculos" locationId={selectedLocationId} />
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold text-slate-900">
@@ -177,3 +187,5 @@ export function VehiclesPage() {
     </>
   );
 }
+
+

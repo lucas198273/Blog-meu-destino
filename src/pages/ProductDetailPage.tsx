@@ -115,14 +115,14 @@ export function ProductDetailPage() {
   function openOffer() {
     if (!affiliateUrl) return;
     trackEvent('click_affiliate', {
-      product_id: data.id,
+      product_id: data?.id,
       partner_name: partner?.nome ?? '',
     });
     window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
   }
 
   const relatedProducts = (related.data?.items ?? []).filter(
-    (item) => item.id !== data.id,
+    (item) => item.id !== data?.id,
   );
 
   return (

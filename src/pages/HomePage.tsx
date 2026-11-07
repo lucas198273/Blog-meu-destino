@@ -83,7 +83,7 @@ export function HomePage() {
           src={HERO_BANNER_SRC}
           alt=""
           aria-hidden="true"
-          fetchPriority="high"
+          {...({ fetchpriority: "high" } as Record<string, string>)}
           decoding="async"
           className="absolute inset-0 -z-10 h-full w-full object-cover object-center"
         />

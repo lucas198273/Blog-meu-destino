@@ -35,7 +35,7 @@ describe('category tree filtering', () => {
         meta: { page: 1, limit: 100, total: 2, totalPages: 1 },
       },
     };
-    const fetchPage = vi.fn(async ({ category }: { category?: string }) => {
+    const fetchPage = vi.fn(async ({ category }: { category?: string; page?: number; limit?: number }) => {
       if (!category) throw new Error('Expected category ID');
       return responses[category];
     });
