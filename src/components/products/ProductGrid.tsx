@@ -18,7 +18,7 @@ export function ProductGrid({
       className={
         layout === 'carousel'
           ? 'w-[calc((100%_-_1rem)/2)] max-w-[220px] shrink-0 snap-start'
-          : 'min-w-0'
+          : 'min-w-0 w-full'
       }
     >
       <ProductCard product={product} />
@@ -33,10 +33,12 @@ export function ProductGrid({
     );
   }
 
+  // Cards largos: 1 coluna no mobile (largura total), 2 no tablet,
+  // 3 no desktop (era lg:4 / xl:5 — cards ficavam comprimidos).
   return (
     <div
       className={cn(
-        'grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
+        'grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8',
         className,
       )}
     >
