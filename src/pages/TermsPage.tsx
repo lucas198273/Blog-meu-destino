@@ -9,7 +9,7 @@ export function TermsPage() {
         <title>Termos de Uso | Meu Destino</title>
         <meta
           name="description"
-          content="Leia os Termos de Uso do Meu Destino, guia independente de viagens e recomendações."
+          content=" Leia os Termos de Uso do Meu Destino, guia independente de viagens e recomendações."
         />
         <link rel="canonical" href={canonicalUrl('/termos-de-uso')} />
       </Helmet>
