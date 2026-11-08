@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import type { BlogPost } from '../../types/blog';
+import type { BlogPostSummary } from '../../types/blog';
 import { Card } from '../ui/Card';
 import { LocationBadge } from '../common/LocationBadge';
 
-export function PostCard({ post }: { post: BlogPost }) {
+export function PostCard({ post }: { post: BlogPostSummary }) {
   const excerpt = post.excerpt?.trim();
 
   return (

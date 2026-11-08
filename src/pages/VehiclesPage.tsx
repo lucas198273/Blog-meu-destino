@@ -135,7 +135,6 @@ export function VehiclesPage() {
         />
 
         <section className="min-w-0">
-        <DynamicWidget niche="aluguel-veiculos" locationId={selectedLocationId} />
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold text-slate-900">
@@ -181,6 +180,7 @@ export function VehiclesPage() {
             description="Experimente outro parceiro ou tipo de veículo."
           />
         )}
+        <DynamicWidget niche="aluguel-veiculos" locationId={selectedLocationId} />
         </section>
         </div>
       </Container>

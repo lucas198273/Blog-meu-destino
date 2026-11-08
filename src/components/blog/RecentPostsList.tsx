@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { usePosts } from '../../hooks/usePosts';
-import type { BlogPost } from '../../types/blog';
+import type { BlogPostSummary } from '../../types/blog';
 
 const RECENT_LIMIT = 6;
 const VISIBLE_COUNT = 5;
@@ -21,7 +21,7 @@ export function RecentPostsList({ currentPostId }: RecentPostsListProps) {
   const params = useMemo(() => ({ limit: RECENT_LIMIT }), []);
   const posts = usePosts(params);
 
-  const recent = useMemo<BlogPost[]>(() => {
+  const recent = useMemo<BlogPostSummary[]>(() => {
     if (!posts.data) return [];
     return posts.data.items
       .filter((p) => p.id !== currentPostId)

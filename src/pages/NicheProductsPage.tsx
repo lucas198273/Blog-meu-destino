@@ -18,6 +18,7 @@ import type { ListProductsParams, ProductNiche } from '../types/product';
 import { getCategoryTreeIds } from '../lib/categoryTree';
 import { canonicalUrl } from '../lib/seo';
 import { useLocations } from '../hooks/useLocations';
+import { DynamicWidget } from '../components/widgets/DynamicWidget';
 
 const PAGE_SIZE = 12;
 
@@ -75,6 +76,10 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
       limit: PAGE_SIZE,
     }),
     [niche, page, partner, location],
+  );
+  const selectedLocationId = useMemo(
+    () => locations.data?.find((item) => item.slug === location)?.id ?? null,
+    [locations.data, location],
   );
   const products = useProductsForCategoryTree(params, categoryIds);
   const meta = products.data?.meta;
@@ -252,6 +257,12 @@ export function NicheProductsPage({ niche }: { niche: ProductNiche }) {
             description="Experimente outra categoria ou volte em breve para conferir novas ofertas."
           />
         )}
+        {niche === 'veiculos' ? (
+          <DynamicWidget
+            niche="aluguel-veiculos"
+            locationId={selectedLocationId}
+          />
+        ) : null}
           </section>
         </div>
       </Container>

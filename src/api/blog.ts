@@ -1,5 +1,5 @@
 import { apiGet, apiGetList } from '../lib/http';
-import type { BlogCategory, BlogPost, ListBlogPostsParams } from '../types/blog';
+import type { BlogCategory, BlogPost, BlogPostSummary, ListBlogPostsParams } from '../types/blog';
 import type { Product } from '../types/product';
 
 /**
@@ -19,7 +19,7 @@ export const blogApi = {
       }
     }
     const query = search.toString();
-    return apiGetList<BlogPost>(`/api/blog/posts${query ? `?${query}` : ''}`);
+    return apiGetList<BlogPostSummary>(`/api/blog/posts${query ? `?${query}` : ''}`);
   },
 
   getPost: (idOrSlug: string) =>

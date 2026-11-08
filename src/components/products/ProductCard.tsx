@@ -16,10 +16,7 @@ import { Card } from '../ui/Card';
 // equipamentos). Estrutura padrão:
 //   imagem (h-48, w-full) → header (título + localização) →
 //   specs (metadata JSON, só veículos) → footer (preço + CTA laranja).
-// Classes-chave contra corte/overflow:
-//   - container: flex flex-col h-full w-full overflow-hidden
-//   - título:    line-clamp-2 (não empurra o preço para fora do card)
-//   - footer:    mt-auto flex items-center justify-between gap-2
+// O rodapé usa container queries para reagir à largura do card, não à tela.
 function asText(value: unknown): string {
   if (typeof value === 'string') return value.trim();
   if (typeof value === 'number') return String(value);
@@ -59,7 +56,7 @@ export function ProductCard({ product }: { product: Product }) {
   const ctaLabel = isVehicle ? 'Alugar agora' : 'Ver oferta';
 
   return (
-    <Card className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
+    <Card className="group relative flex h-full w-full @container flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
       {/* Imagem — topo, w-full, altura fixa para alinhamento entre cards.
           `object-contain` + fundo neutro: o produto aparece 100% completo,
           centralizado e sem cortes/zoom. */}
@@ -137,13 +134,12 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       ) : null}
 
-      {/* Footer — preço à esquerda, CTA à direita, borda sutil no topo.
-          `mt-auto` empurra o rodapé para o fim do card; `shrink-0` no botão
-          garante que o CTA nunca é comprimido/cortado no mobile. */}
-      <div className="mt-auto flex items-center justify-between gap-2 border-t border-gray-200 px-4 py-3.5 sm:px-5">
+      {/* Em telas estreitas, preço e CTA ficam em linhas separadas para não
+          competir pela largura. Em telas maiores voltam para a mesma linha. */}
+      <div className="mt-auto flex flex-col items-stretch gap-2 border-t border-gray-200 px-4 py-3.5 @xs:flex-row @xs:items-center @xs:justify-between @xs:px-5">
         {product.preco !== null ? (
           <div className="flex min-w-0 items-baseline gap-0.5">
-            <span className="text-lg font-bold text-slate-900">
+            <span className="whitespace-nowrap text-lg font-bold text-slate-900">
               {formatPrice(product.preco)}
             </span>
             {product.price_unit ? (
@@ -160,7 +156,7 @@ export function ProductCard({ product }: { product: Product }) {
             href={product.affiliate_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+            className="inline-flex h-10 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition-colors hover:bg-orange-600 @xs:w-auto"
           >
             {ctaLabel}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -168,7 +164,7 @@ export function ProductCard({ product }: { product: Product }) {
         ) : (
           <Link
             to={`/produto/${product.slug}`}
-            className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+            className="inline-flex h-10 w-full shrink-0 items-center justify-center rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition-colors hover:bg-orange-600 @xs:w-auto"
           >
             {ctaLabel}
           </Link>

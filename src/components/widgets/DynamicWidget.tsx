@@ -61,40 +61,52 @@ export function DynamicWidget({ niche, locationId }: DynamicWidgetProps) {
 
     // O container é renderizado no mesmo commit em que status === 'ready',
     // mas o ref só fica disponível depois do paint; garante com rAF.
+    const targetContainer = containerRef.current;
     let cancelled = false;
     const frame = requestAnimationFrame(() => {
       if (cancelled) return;
-      const container = containerRef.current;
+      const container = targetContainer;
       if (!container) return;
 
       const parsed = new DOMParser().parseFromString(widget.codigo_script, 'text/html');
-
-      // 1) Extrai e insere a div (e demais nós não-script) no container via ref.
       const frag = document.createDocumentFragment();
-      const scripts: HTMLScriptElement[] = [];
+      const compactDiscoverCars = widget.provider.toLowerCase() === 'discovercars';
       parsed.body.childNodes.forEach((node) => {
-        if (node.nodeName === 'SCRIPT') {
-          scripts.push(node as HTMLScriptElement);
-          return;
-        }
         frag.appendChild(document.importNode(node, true));
       });
       container.appendChild(frag);
 
-      // 2) Recria cada <script> como elemento novo para que o browser o execute,
-      //    copiando TODOS os atributos (data-*, src, id, async etc.).
-      const inserted: HTMLScriptElement[] = scripts.map((original) => {
+      // Scripts importados via DOMParser/importNode são inertes. Recriá-los
+      // no próprio lugar ativa também scripts aninhados dentro de divs.
+      const inserted: HTMLScriptElement[] = [];
+      container.querySelectorAll('script').forEach((original) => {
         const script = document.createElement('script');
         for (const attr of Array.from(original.attributes)) {
           script.setAttribute(attr.name, attr.value);
         }
-        if (original.src) {
-          script.src = original.src;
-        } else {
+        if (compactDiscoverCars) {
+          // Mantém o formulário e a configuração de destino do widget, mas
+          // remove os blocos promocionais que o deixam alto demais na página.
+          for (const attribute of [
+            'data-layout_benefits',
+            'data-layout_description',
+            'data-layout_powered_by',
+            'data-layout_supplier_logos',
+            'data-layout_title',
+            'data-layout_top_logo',
+          ]) {
+            script.setAttribute(attribute, 'off');
+          }
+          script.setAttribute('data-layout_description_text', '');
+          script.setAttribute('data-title-text', '');
+          script.setAttribute('data-iframe-height', '320');
+          script.setAttribute('data-iframe-scrolling', 'auto');
+        }
+        if (!original.hasAttribute('src')) {
           script.textContent = original.textContent ?? '';
         }
-        document.body.appendChild(script); // insere no final do body
-        return script;
+        original.replaceWith(script);
+        inserted.push(script);
       });
 
       injected.push(...inserted);
@@ -107,20 +119,31 @@ export function DynamicWidget({ niche, locationId }: DynamicWidgetProps) {
       cancelled = true;
       cancelAnimationFrame(frame);
       for (const script of injected) script.remove();
-      if (containerRef.current) containerRef.current.textContent = '';
+      if (targetContainer) targetContainer.textContent = '';
     };
   }, [status, widget]);
 
   // data: null, erro ou sem codigo_script → não renderiza nada.
-  if (status === 'error' || !widget || !widget.codigo_script) return null;
-  if (status !== 'ready') {
-    // Skeleton discreto enquanto carrega; alguns widgets não têm altura fixa.
+  if (status === 'loading' || status === 'idle') {
     return (
-      <div
-        aria-hidden="true"
-        className="mb-6 h-[90px] w-full animate-pulse rounded-xl bg-slate-200/60"
-      />
+      <section aria-hidden="true" className="mx-auto mt-10 w-full max-w-5xl">
+        <div className="h-24 w-full animate-pulse rounded-2xl border border-slate-200 bg-slate-100" />
+      </section>
     );
   }
-  return <div ref={containerRef} data-widget-provider={widget.provider} />;
+  if (status === 'error' || !widget || !widget.codigo_script) return null;
+  return (
+    <section
+      aria-label="Mais opções de aluguel de veículos"
+      className="mx-auto mt-10 w-full max-w-5xl"
+      data-widget-provider={widget.provider}
+    >
+      <h2 className="mb-3 text-lg font-semibold text-slate-900">
+        Compare opções de aluguel
+      </h2>
+      <div className="rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:p-3">
+        <div ref={containerRef} className="w-full [&_iframe]:block [&_iframe]:w-full [&_iframe]:max-w-full" />
+      </div>
+    </section>
+  );
 }

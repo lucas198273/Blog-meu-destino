@@ -17,25 +17,31 @@ export interface BlogCategory {
   updated_at: string;
 }
 
-/** PostDto do backend: BlogPost sem tenant_id. Sem projeção LIST/DETAIL — o repository usa select('*'). */
-export interface BlogPost {
+/** Campos retornados pela projeção de GET /api/blog/posts. */
+export interface BlogPostSummary {
   id: string;
   category_id: string | null;
-  location_id?: string | null;
+  location_id: string | null;
   title: string;
   slug: string;
   excerpt: string | null;
-  content: string;
   cover_image_url: string | null;
   status: PostStatus;
   featured: boolean;
   tags: string[];
+  published_at: string | null;
+  created_at: string;
+  location: { id: string; nome: string; slug: string } | null;
+}
+
+/** Campos retornados por GET /api/blog/posts/:idOrSlug. */
+export interface BlogPost extends Omit<BlogPostSummary, 'location'> {
+  content: string;
   meta_title: string | null;
   meta_description: string | null;
   og_image_url: string | null;
-  published_at: string | null;
-  created_at: string;
   updated_at: string;
+  location?: { id: string; nome: string; slug: string } | null;
 }
 
 export interface ListBlogPostsParams {

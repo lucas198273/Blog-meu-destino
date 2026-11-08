@@ -1,5 +1,5 @@
 
-import type { BlogPost } from '../../types/blog';
+import type { BlogPostSummary } from '../../types/blog';
 import { PostCard } from './PostCard';
 import { HorizontalCarousel } from '../common/HorizontalCarousel';
 
@@ -7,7 +7,7 @@ export function PostList({
   posts,
   layout = 'grid',
 }: {
-  posts: BlogPost[];
+  posts: BlogPostSummary[];
   layout?: 'grid' | 'carousel';
 }) {
   const items = posts.map((post) => (
