@@ -167,7 +167,9 @@ export function BlogFiltersSidebar({
 
   return (
     <>
-      <MobileFilterDrawer title="Filtros do blog">{filters}</MobileFilterDrawer>
+      <MobileFilterDrawer title="Filtros do blog" closeOnSelect>
+        {filters}
+      </MobileFilterDrawer>
       <aside className="hidden space-y-5 lg:sticky lg:top-24 lg:block">
         {filters}
       </aside>

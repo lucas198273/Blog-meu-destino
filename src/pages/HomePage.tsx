@@ -6,21 +6,19 @@ import {
   usePosts,
   usePostsForCategoryTree,
 } from '../hooks/usePosts';
-import { useProducts } from '../hooks/useProducts';
 import { getCategoryTreeIds } from '../lib/categoryTree';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
 import { ButtonLink } from '../components/ui/Button';
 import { CategoryPills } from '../components/blog/CategoryPills';
 import { PostList } from '../components/blog/PostList';
-import { ProductGrid } from '../components/products/ProductGrid';
+import { ProductCarousel } from '../components/products/ProductCarousel';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { canonicalUrl } from '../lib/seo';
 
 const POSTS_LIMIT = 9;
 const FEATURED_LIMIT = 3;
-const FEATURED_PRODUCTS_LIMIT = 9;
 /** Caminho do banner do hero. */
 const HERO_BANNER_SRC = '/assets/bloghero.png';
 
@@ -51,10 +49,6 @@ export function HomePage() {
   );
   const treeFilteredPosts = usePostsForCategoryTree(filteredParams, categoryIds);
   const featuredPosts = usePosts(featuredParams);
-  const featuredProducts = useProducts({
-    featured: true,
-    limit: FEATURED_PRODUCTS_LIMIT,
-  });
 
   const handleSelect = useCallback(
     (slug: string | null) => {
@@ -120,30 +114,7 @@ export function HomePage() {
       </section>
 
       <Container className="space-y-10 py-10 sm:space-y-14 sm:py-16">
-        <section>
-          <h2 className="mb-5 text-xl font-bold text-[var(--color-primary)] sm:mb-8 sm:text-2xl">
-            Ofertas em destaque
-          </h2>
-          {featuredProducts.isLoading ? (
-            <PageLoader />
-          ) : featuredProducts.isError ? (
-            <ErrorState
-              message="Não foi possível carregar as ofertas."
-              onRetry={() => void featuredProducts.refetch()}
-            />
-          ) : null}
-          {!featuredProducts.isLoading &&
-          !featuredProducts.isError &&
-          featuredProducts.data?.items.length ? (
-            <ProductGrid
-              products={featuredProducts.data.items}
-              layout="carousel"
-            />
-          ) : !featuredProducts.isLoading && !featuredProducts.isError ? (
-            <EmptyState title="Nenhuma oferta em destaque ainda" />
-          ) : null}
-        </section>
-
+        {/* Posts em destaque primeiro, ofertas de produtos logo abaixo. */}
         <section>
           <h2 className="mb-5 text-xl font-bold text-slate-900 sm:mb-8 sm:text-2xl">
             Posts em destaque
@@ -161,6 +132,11 @@ export function HomePage() {
             <EmptyState title="Nenhum post em destaque ainda" />
           )}
         </section>
+
+        {/* Resumo de cada nicho em carrossel horizontal. */}
+        <ProductCarousel niche="veiculos" limit={6} />
+        <ProductCarousel niche="viagens" limit={6} />
+        <ProductCarousel niche="equipamentos" limit={6} />
 
         <section>
           <h2 className="mb-5 text-xl font-bold text-slate-900 sm:mb-8 sm:text-2xl">

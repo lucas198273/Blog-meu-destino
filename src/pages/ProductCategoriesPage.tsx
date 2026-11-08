@@ -5,6 +5,7 @@ import { ErrorState } from '../components/common/ErrorState';
 import { Container } from '../components/ui/Container';
 import { PageLoader } from '../components/ui/Spinner';
 import { useNicheProductCategories, useProducts } from '../hooks/useProducts';
+import { ProductCarousel } from '../components/products/ProductCarousel';
 import type { ProductCategory, ProductNiche } from '../types/product';
 import { canonicalUrl } from '../lib/seo';
 
@@ -146,6 +147,13 @@ export function ProductCategoriesPage() {
         ) : (
           <p className="text-sm text-slate-500">Nenhuma categoria disponível.</p>
         )}
+
+        {/* Catálogo completo por nicho, um carrossel horizontal por nicho. */}
+        <div className="mt-14 space-y-12">
+          <ProductCarousel niche="veiculos" limit={8} />
+          <ProductCarousel niche="viagens" limit={8} />
+          <ProductCarousel niche="equipamentos" limit={8} />
+        </div>
       </Container>
     </>
   );

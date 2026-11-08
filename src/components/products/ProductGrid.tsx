@@ -33,12 +33,13 @@ export function ProductGrid({
     );
   }
 
-  // Cards largos: 1 coluna no mobile (largura total), 2 no tablet,
-  // 3 no desktop (era lg:4 / xl:5 — cards ficavam comprimidos).
+  // Cards largos e padronizados: 1 coluna no mobile (100% da largura),
+  // 2 no tablet/desktop e no MÁXIMO 3 em telas muito largas — nunca 4 ou 5.
+  // Gap generoso para respiro entre cards.
   return (
     <div
       className={cn(
-        'grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8',
+        'grid w-full grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3 xl:gap-8',
         className,
       )}
     >

@@ -7,8 +7,6 @@ interface DynamicWidgetProps {
   niche: string;
   /** ID da localização selecionada no filtro (null = global). */
   locationId?: string | null;
-  /** ID do tenant, quando disponível em contexto autenticado. */
-  tenantId?: string;
 }
 
 /**
@@ -19,14 +17,19 @@ interface DynamicWidgetProps {
  * mas elementos criados via document.createElement('script') e inseridos
  * no DOM executam normalmente.
  *
- * Fallback: quando nenhum `locationId` está selecionado, a chamada vai
- * SEM `location_id` — o backend resolve a hierarquia (cidade → estado →
- * país → global/Brasil) e devolve o widget da raiz.
+ * Integração com o backend:
+ * - Rota: GET `/api/widgets/resolve?niche=<niche>[&location_id=<uuid>]`
+ * - O tenant é resolvido via header `X-Tenant-Slug` (enviado pelo
+ *   `apiGet` a partir de `VITE_DEFAULT_TENANT_SLUG`) — site público
+ *   não usa JWT, logo NÃO enviamos `tenant_id`.
+ * - Envelope: `{ success: true, data: { codigo_script, provider, ... } }`
+ *   ou `{ success: true, data: null }` (nenhum widget cadastrado) —
+ *   nesse caso o componente NÃO renderiza nada.
  *
- * Em qualquer falha da API o componente não renderiza nada — o widget é
- * um complemento e jamais deve quebrar a página pública.
+ * Em qualquer falha da API o componente também não renderiza nada —
+ * o widget é um complemento e jamais deve quebrar a página pública.
  */
-export function DynamicWidget({ niche, locationId, tenantId }: DynamicWidgetProps) {
+export function DynamicWidget({ niche, locationId }: DynamicWidgetProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [widget, setWidget] = useState<ResolvedWidget | null>(null);
   const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
@@ -34,17 +37,12 @@ export function DynamicWidget({ niche, locationId, tenantId }: DynamicWidgetProp
   useEffect(() => {
     const controller = new AbortController();
     setStatus('loading');
-    console.log('[DynamicWidget] montado — buscando widget', {
-      niche,
-      locationId,
-      tenantId,
-    });
     widgetsApi
-      .resolve({ tenant_id: tenantId ?? '', niche, location_id: locationId ?? null })
+      .resolve({ niche, location_id: locationId ?? null })
       .then((resolved) => {
         if (controller.signal.aborted) return;
-        console.log('[DynamicWidget] resposta da API:', resolved);
-        setWidget(resolved ?? null);
+        // `resolved` é o `data` do envelope: pode ser o widget OU null.
+        setWidget(resolved && resolved.codigo_script ? resolved : null);
         setStatus('ready');
       })
       .catch((error) => {
@@ -54,15 +52,12 @@ export function DynamicWidget({ niche, locationId, tenantId }: DynamicWidgetProp
         setStatus('error');
       });
     return () => controller.abort();
-  }, [niche, locationId, tenantId]);
+  }, [niche, locationId]);
 
   // Injeta o HTML + executa o script do widget.
   useEffect(() => {
     if (status !== 'ready' || !widget) return;
-    if (!widget.codigo_script) {
-      console.warn('[DynamicWidget] widget sem codigo_script — nada a injetar');
-      return;
-    }
+    if (!widget.codigo_script) return;
 
     // O container é renderizado no mesmo commit em que status === 'ready',
     // mas o ref só fica disponível depois do paint; garante com rAF.
@@ -102,9 +97,6 @@ export function DynamicWidget({ niche, locationId, tenantId }: DynamicWidgetProp
         return script;
       });
 
-      console.log(
-        `[DynamicWidget] injetado: ${scripts.length} script(s), provider=${widget.provider}`,
-      );
       injected.push(...inserted);
     });
     const injected: HTMLScriptElement[] = [];
@@ -119,8 +111,9 @@ export function DynamicWidget({ niche, locationId, tenantId }: DynamicWidgetProp
     };
   }, [status, widget]);
 
-  if (status === 'error') return null;
-  if (status !== 'ready' || !widget) {
+  // data: null, erro ou sem codigo_script → não renderiza nada.
+  if (status === 'error' || !widget || !widget.codigo_script) return null;
+  if (status !== 'ready') {
     // Skeleton discreto enquanto carrega; alguns widgets não têm altura fixa.
     return (
       <div

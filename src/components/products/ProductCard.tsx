@@ -12,10 +12,14 @@ import { formatPrice } from '../../lib/format';
 import type { Product } from '../../types/product';
 import { Card } from '../ui/Card';
 
-// Camada de apresentação: card de VEÍCULO focado em conversão.
-// Estrutura: imagem (h-48) → header (título + localização) →
-// grid de especificações (metadata JSON) → footer (preço + CTA).
-
+// Camada de apresentação unificada de card de produto (veículos, viagens,
+// equipamentos). Estrutura padrão:
+//   imagem (h-48, w-full) → header (título + localização) →
+//   specs (metadata JSON, só veículos) → footer (preço + CTA laranja).
+// Classes-chave contra corte/overflow:
+//   - container: flex flex-col h-full w-full overflow-hidden
+//   - título:    line-clamp-2 (não empurra o preço para fora do card)
+//   - footer:    mt-auto flex items-center justify-between gap-2
 function asText(value: unknown): string {
   if (typeof value === 'string') return value.trim();
   if (typeof value === 'number') return String(value);
@@ -52,10 +56,14 @@ export function ProductCard({ product }: { product: Product }) {
     specs.push({ icon: AirVent, label: 'A/C' });
   }
 
+  const ctaLabel = isVehicle ? 'Alugar agora' : 'Ver oferta';
+
   return (
     <Card className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-slate-200 hover:shadow-md">
-      {/* Imagem — topo, 100% de largura, altura fixa para alinhamento */}
-      <div className="relative">
+      {/* Imagem — topo, w-full, altura fixa para alinhamento entre cards.
+          `object-contain` + fundo neutro: o produto aparece 100% completo,
+          centralizado e sem cortes/zoom. */}
+      <div className="relative bg-gray-50">
         {cover ? (
           <Link to={`/produto/${product.slug}`} aria-label={`Ver detalhes de ${product.nome}`}>
             <img
@@ -66,7 +74,7 @@ export function ProductCard({ product }: { product: Product }) {
               }
               loading="lazy"
               decoding="async"
-              className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="h-48 w-full object-contain"
             />
           </Link>
         ) : (
@@ -99,7 +107,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex flex-col gap-1.5 px-4 pt-4 sm:px-5">
         <Link
           to={`/produto/${product.slug}`}
-          className="line-clamp-2 text-lg font-bold leading-snug text-[var(--color-text)] hover:text-[var(--color-primary)]"
+          className="line-clamp-2 min-h-[2lh] text-lg font-bold leading-snug text-[var(--color-text)] hover:text-[var(--color-primary)]"
         >
           {product.nome}
         </Link>
@@ -127,19 +135,19 @@ export function ProductCard({ product }: { product: Product }) {
             </div>
           ))}
         </div>
-      ) : (
-        <div className="px-4 pt-2 sm:px-5" />
-      )}
+      ) : null}
 
-      {/* Footer — preço à esquerda, CTA à direita, borda sutil no topo */}
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-gray-200 px-4 py-3.5 sm:px-5">
+      {/* Footer — preço à esquerda, CTA à direita, borda sutil no topo.
+          `mt-auto` empurra o rodapé para o fim do card; `shrink-0` no botão
+          garante que o CTA nunca é comprimido/cortado no mobile. */}
+      <div className="mt-auto flex items-center justify-between gap-2 border-t border-gray-200 px-4 py-3.5 sm:px-5">
         {product.preco !== null ? (
-          <div className="flex items-baseline gap-0.5">
+          <div className="flex min-w-0 items-baseline gap-0.5">
             <span className="text-lg font-bold text-slate-900">
               {formatPrice(product.preco)}
             </span>
             {product.price_unit ? (
-              <span className="text-xs font-medium text-slate-400">
+              <span className="truncate text-xs font-medium text-slate-400">
                 /{product.price_unit.replace(/^por\s+/i, '')}
               </span>
             ) : null}
@@ -147,7 +155,6 @@ export function ProductCard({ product }: { product: Product }) {
         ) : (
           <span className="text-sm font-medium text-slate-400">Consulte</span>
         )}
-
         {product.affiliate_url ? (
           <a
             href={product.affiliate_url}
@@ -155,7 +162,7 @@ export function ProductCard({ product }: { product: Product }) {
             rel="noopener noreferrer"
             className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
           >
-            Alugar agora
+            {ctaLabel}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </a>
         ) : (
@@ -163,7 +170,7 @@ export function ProductCard({ product }: { product: Product }) {
             to={`/produto/${product.slug}`}
             className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg bg-orange-500 px-4 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
           >
-            Ver oferta
+            {ctaLabel}
           </Link>
         )}
       </div>

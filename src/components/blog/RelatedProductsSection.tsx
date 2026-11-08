@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import type { Product } from '../../types/product';
 import { formatPrice } from '../../lib/format';
 import { HorizontalCarousel } from '../common/HorizontalCarousel';
+import { ProductCarousel } from '../products/ProductCarousel';
 
 interface RelatedProductsSectionProps {
   postId: string;
@@ -10,19 +11,17 @@ interface RelatedProductsSectionProps {
 }
 
 /**
- * Seção "Destinos relacionados" no Post Detail.
+ * Seção "Produtos recomendados para essa viagem" no fim do post.
  * Busca GET /api/blog/posts/:id/products (data é array puro).
- * Loading: 3 skeleton cards. Vazio/erro: omitir silenciosamente.
+ * Loading: 3 skeleton cards. Sem produtos vinculados: cai para um
+ * carrossel por nicho. Erro: omitir silenciosamente.
  */
 export function RelatedProductsSection({
   postId,
-  title = 'Vai viajar para cá? Confira as ofertas:',
+  title = 'Produtos recomendados para essa viagem:',
 }: RelatedProductsSectionProps) {
   // enabled só com post.id real — nunca chamar /products antes.
   const products = usePostProducts(postId);
-
-  // Debug temporário: confirmar que a API devolve array puro de produtos.
-  console.log('Produtos do Post:', products.data);
 
   if (products.isLoading) {
     return (
@@ -38,8 +37,25 @@ export function RelatedProductsSection({
     );
   }
 
-  if (products.isError || !products.data || products.data.length === 0) {
+  if (products.isError) {
     return null;
+  }
+
+  const items: Product[] = products.data ?? [];
+
+  // Sem ofertas vinculadas ao post: recomendações gerais por nicho.
+  if (items.length === 0) {
+    return (
+      <section aria-labelledby="cursos-relacionados" className="mt-16">
+        <h2
+          id="cursos-relacionados"
+          className="mb-6 text-2xl font-bold text-slate-900"
+        >
+          {title}
+        </h2>
+        <ProductCarousel niche="viagens" limit={8} />
+      </section>
+    );
   }
 
   return (
@@ -51,7 +67,7 @@ export function RelatedProductsSection({
         {title}
       </h2>
       <HorizontalCarousel ariaLabel="Ofertas relacionadas">
-        {products.data.map((product) => (
+        {items.map((product) => (
           <div
             key={product.id}
             className="w-[min(85%,300px)] shrink-0 snap-start"

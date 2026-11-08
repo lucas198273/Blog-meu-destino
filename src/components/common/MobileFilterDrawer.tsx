@@ -4,9 +4,12 @@ import { SlidersHorizontal, X } from 'lucide-react';
 export function MobileFilterDrawer({
   children,
   title = 'Filtros',
+  closeOnSelect = false,
 }: {
   children: ReactNode;
   title?: string;
+  /** Fecha o drawer automaticamente quando o usuário seleciona um filtro. */
+  closeOnSelect?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -25,6 +28,19 @@ export function MobileFilterDrawer({
       document.removeEventListener('keydown', closeOnEscape);
     };
   }, [open]);
+
+  /**
+   * Fecha o drawer quando o usuário escolhe qualquer opção de filtro.
+   * Delegação de evento: captura cliques em botões dentro do conteúdo
+   * (exceto o próprio botão "limpar filtros", que também faz sentido fechar).
+   */
+  function handleContentClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (!closeOnSelect || !open) return;
+    const target = event.target as HTMLElement;
+    if (target.closest('button, a, select, label')) {
+      setOpen(false);
+    }
+  }
 
   return (
     <>
@@ -64,7 +80,12 @@ export function MobileFilterDrawer({
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </header>
-            <div className="flex-1 overflow-y-auto p-4">{children}</div>
+            <div
+              className="flex-1 overflow-y-auto p-4"
+              onClick={handleContentClick}
+            >
+              {children}
+            </div>
           </section>
         </div>
       ) : null}
