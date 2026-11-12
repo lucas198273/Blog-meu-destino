@@ -160,6 +160,7 @@ async function main() {
       fetchCollection<ApiItem>(apiUrl, '/api/products/categories'),
     ]);
 
+    
     const [products, posts, blogCategories, productCategories] = collections;
     if (products.status === 'fulfilled') {
       for (const product of products.value.items) {
